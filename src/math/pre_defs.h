@@ -42,6 +42,16 @@ typedef Vec2<int> Vec2i;
 
 template <typename T> using Matrix3x3 = FixedSizeMatrix<T, 3, 3>;
 
+// Forward declarations for curves
+template <typename T, typename VecType> class BezierCurve;
+template <typename T, typename VecType> class BSplineCurve;
+template <typename T, typename VecType> class QuinticPolynomial;
+template <typename T> class QuinticPolynomial1D;
+
+// Forward declarations for filters
+template <typename T> class FIRFilter;
+template <typename T> class IIRFilter;
+
 } // namespace lumos
 
 #endif // LUMOS_MATH_PRE_DEFS_H_

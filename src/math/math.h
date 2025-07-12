@@ -32,6 +32,8 @@
 // #include "math/image/image_rgba.h"
 
 #include "math/transformations/quaternion.h"
+#include "math/curves/curves.h"
+#include "math/filters/filters.h"
 
 #include "math/pre_defs.h"
 // clang-format on
