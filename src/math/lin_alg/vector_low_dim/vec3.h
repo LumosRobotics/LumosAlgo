@@ -3,6 +3,7 @@
 
 #include <cmath>
 
+#include "math/lin_alg/matrix_fixed/matrix_fixed.h"
 #include "math/lin_alg/vector_low_dim/class_def/vec3.h"
 
 namespace lumos {

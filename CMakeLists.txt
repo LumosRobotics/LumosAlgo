@@ -15,8 +15,8 @@ set(CMAKE_BUILD_TYPE Debug)
 set(PROJECT_VERSION "1.0.0")
 
 # Googletest
-link_directories(${CMAKE_SOURCE_DIR}/external/googletest/build/lib)
-include_directories(${CMAKE_SOURCE_DIR}/external/googletest/googletest/include)
+link_directories(${CMAKE_SOURCE_DIR}/src/external/googletest/lib)
+include_directories(${CMAKE_SOURCE_DIR}/src/external/googletest/googletest/include)
 
 set(GTEST_LIB_FILES libgtest.a
                     libgtest_main.a
@@ -30,5 +30,8 @@ add_compile_options(-Wall -Wextra -pedantic)
 # Include
 include_directories(${CMAKE_SOURCE_DIR}/src/)
 
-add_subdirectory(src/applications/simple)
+# Enable testing
+enable_testing()
 
+add_subdirectory(src/applications/simple)
+add_subdirectory(src/math/curves/test)
