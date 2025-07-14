@@ -35,3 +35,4 @@ enable_testing()
 
 add_subdirectory(src/applications/simple)
 add_subdirectory(src/math/curves/test)
+add_subdirectory(src/math/lin_alg/fixed_size_vector/test)

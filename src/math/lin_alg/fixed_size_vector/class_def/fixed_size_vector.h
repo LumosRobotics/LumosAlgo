@@ -26,8 +26,10 @@ public:
   constexpr T dot(const FixedSizeVector &other) const;
 
   constexpr T norm() const;
-
-  friend std::ostream &operator<<(std::ostream &os, const FixedSizeVector &v);
 };
+
+// Stream operator declaration
+template <typename T, uint16_t N>
+std::ostream &operator<<(std::ostream &os, const FixedSizeVector<T, N> &v);
 
 #endif // FIXED_SIZE_VECTOR_H

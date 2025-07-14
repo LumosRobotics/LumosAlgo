@@ -1,4 +1,7 @@
 #include "math/lin_alg/fixed_size_vector/class_def/fixed_size_vector.h"
+#include <cmath>
+#include <initializer_list>
+#include <iostream>
 
 template <typename T, uint16_t N>
 constexpr FixedSizeVector<T, N>::FixedSizeVector(
@@ -64,8 +67,11 @@ constexpr T FixedSizeVector<T, N>::norm() const {
 template <typename T, uint16_t N>
 std::ostream &operator<<(std::ostream &os, const FixedSizeVector<T, N> &v) {
   os << "[";
-  for (uint16_t i = 0; i < N; ++i)
-    os << v[i] << (i < N - 1 ? ", " : "");
+  for (uint16_t i = 0; i < N; ++i) {
+    os << v[i];
+    if (i < N - 1)
+      os << ", ";
+  }
   os << "]";
   return os;
 }
