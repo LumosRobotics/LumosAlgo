@@ -1,45 +1,81 @@
-#ifndef QUATERNION_HPP
-#define QUATERNION_HPP
+#include "math/transformations/class_def/quaternion.h"
 
 #include <cmath>
-#include <iostream>
-
-#include "math/lin_alg/matrix_fixed/matrix_fixed.h"
 
 namespace lumos {
-template <typename T> class Quaternion {
-public:
-  T w_, x_, y_, z_;
+// Default constructor
+template <typename T>
+constexpr Quaternion<T>::Quaternion() : w_(1), x_(0), y_(0), z_(0) {}
 
-  // Constructors
-  constexpr Quaternion();
-  constexpr Quaternion(T w, T x, T y, T z);
-  // constexpr Quaternion(const FixedSizeVector<T, 3>& axis, T angle);
+// Parameterized constructor
+template <typename T>
+constexpr Quaternion<T>::Quaternion(T w, T x, T y, T z)
+    : w_(w), x_(x), y_(y), z_(z) {}
 
-  // Quaternion operations
-  constexpr Quaternion operator+(const Quaternion &other) const;
-  constexpr Quaternion operator-(const Quaternion &other) const;
-  constexpr Quaternion operator*(const Quaternion &other) const;
-  constexpr Quaternion operator*(const T scalar) const;
-  constexpr Quaternion conjugate() const;
-  constexpr Quaternion inverse() const;
-  constexpr FixedSizeMatrix<T, 3, 3> toRotationMatrix() const;
-  // constexpr FixedSizeVector<T, 3> toEulerAngles() const;
-  // constexpr FixedSizeVector<T, 4> toAxisAngle() const;
+// Constructor from axis-angle
+/*template <typename T> constexpr Quaternion<T>::Quaternion(const
+FixedSizeVector<T, 3>& axis, T angle)
+{
+    T halfAngle = angle / 2;
+    T sinHalfAngle = std::sin(halfAngle);
+    w_ = std::cos(halfAngle);
+    x_ = axis[0] * sinHalfAngle;
+    y_ = axis[1] * sinHalfAngle;
+    z_ = axis[2] * sinHalfAngle;
+}*/
 
-  // Normalization
-  constexpr void normalize();
+// Addition
+template <typename T>
+constexpr Quaternion<T>
+Quaternion<T>::operator+(const Quaternion &other) const {
+  return Quaternion(w_ + other.w_, x_ + other.x_, y_ + other.y_, z_ + other.z_);
+}
 
-  // Output operator
-  friend std::ostream &operator<<(std::ostream &os, const Quaternion &q) {
-    os << "(" << q.w_ << ", " << q.x_ << ", " << q.y_ << ", " << q.z_ << ")";
-    return os;
+// Subtraction
+template <typename T>
+constexpr Quaternion<T>
+Quaternion<T>::operator-(const Quaternion &other) const {
+  return Quaternion(w_ - other.w_, x_ - other.x_, y_ - other.y_, z_ - other.z_);
+}
+
+// Multiplication
+template <typename T>
+constexpr Quaternion<T>
+    Quaternion<T>::operator*(const Quaternion &other) const {
+  return Quaternion(
+      w_ * other.w_ - x_ * other.x_ - y_ * other.y_ - z_ * other.z_,
+      w_ * other.x_ + x_ * other.w_ + y_ * other.z_ - z_ * other.y_,
+      w_ * other.y_ - x_ * other.z_ + y_ * other.w_ + z_ * other.x_,
+      w_ * other.z_ + x_ * other.y_ - y_ * other.x_ + z_ * other.w_);
+}
+
+// Scalar multiplication
+template <typename T>
+constexpr Quaternion<T> Quaternion<T>::operator*(const T scalar) const {
+  return Quaternion(w_ * scalar, x_ * scalar, y_ * scalar, z_ * scalar);
+}
+
+// Conjugate
+template <typename T> constexpr Quaternion<T> Quaternion<T>::conjugate() const {
+  return Quaternion(w_, -x_, -y_, -z_);
+}
+
+// Normalize
+template <typename T> constexpr void Quaternion<T>::normalize() {
+  T norm = std::sqrt(w_ * w_ + x_ * x_ + y_ * y_ + z_ * z_);
+  if (norm > 0) {
+    T inv_norm = static_cast<T>(1.0) / norm;
+    w_ *= inv_norm;
+    x_ *= inv_norm;
+    y_ *= inv_norm;
+    z_ *= inv_norm;
   }
-};
+}
 
-extern template class Quaternion<float>;
-extern template class Quaternion<double>;
+template <typename T>
+constexpr FixedSizeMatrix<T, 3, 3> Quaternion<T>::toRotationMatrix() const {}
+
+template class Quaternion<float>;
+template class Quaternion<double>;
 
 } // namespace lumos
-
-#endif // QUATERNION_HPP

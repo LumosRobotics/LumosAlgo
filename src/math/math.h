@@ -17,7 +17,7 @@
 #include "math/lin_alg/vector_low_dim/vec4.h"
 
 #include "math/transformations/euler_angles.h"
-// #include "math/transformations/axis_angle.h"
+#include "math/transformations/axis_angle.h"
 
 // #include "math/geometry/line_2d.h"
 // #include "math/geometry/line_3d.h"
