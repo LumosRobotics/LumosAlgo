@@ -7,29 +7,40 @@
 #include <cstdint>
 #include <iostream>
 
-template <typename T, uint16_t N> class FixedSizeVector {
-private:
-  T data_[N];
+#include "math/misc/forward_decl.h"
 
-public:
-  constexpr FixedSizeVector() = default;
+namespace lumos
+{
 
-  constexpr FixedSizeVector(std::initializer_list<T> values);
-  constexpr T &operator[](uint16_t index);
-  constexpr const T &operator[](uint16_t index) const;
+  template <typename T, uint16_t N>
+  class FixedSizeVector
+  {
+  private:
+    T data_[N];
 
-  constexpr FixedSizeVector operator+(const FixedSizeVector &other) const;
+  public:
+    constexpr FixedSizeVector() = default;
 
-  constexpr FixedSizeVector operator-(const FixedSizeVector &other) const;
+    constexpr FixedSizeVector(std::initializer_list<T> values);
+    constexpr T &operator[](const uint16_t index);
+    constexpr const T &operator[](const uint16_t index) const;
 
-  constexpr FixedSizeVector operator*(const T scalar) const;
-  constexpr T dot(const FixedSizeVector &other) const;
+    constexpr FixedSizeVector operator+(const FixedSizeVector &other) const;
 
-  constexpr T norm() const;
-};
+    constexpr FixedSizeVector operator-(const FixedSizeVector &other) const;
 
-// Stream operator declaration
-template <typename T, uint16_t N>
-std::ostream &operator<<(std::ostream &os, const FixedSizeVector<T, N> &v);
+    constexpr FixedSizeVector operator*(const T scalar) const;
+    constexpr T dot(const FixedSizeVector &other) const;
+
+    constexpr T norm() const;
+
+    Vector<T> toDynamicVector() const;
+  };
+
+  // Stream operator declaration
+  template <typename T, uint16_t N>
+  std::ostream &operator<<(std::ostream &os, const FixedSizeVector<T, N> &v);
+
+} // namespace lumos
 
 #endif // FIXED_SIZE_VECTOR_H

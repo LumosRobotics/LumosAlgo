@@ -6,36 +6,53 @@
 #include "logging.h"
 #include "math/misc/forward_decl.h"
 
-namespace lumos {
-template <typename T, uint16_t R, uint16_t C> class FixedSizeMatrix {
-  // protected:
-public:
-  T data_[R * C];
+namespace lumos
+{
+  template <typename T, uint16_t R, uint16_t C>
+  class FixedSizeMatrix
+  {
+    // protected:
+  public:
+    T data_[R * C];
 
-  FixedSizeMatrix();
-  template <typename Y> FixedSizeMatrix(const FixedSizeMatrix<Y, R, C> &m);
+    FixedSizeMatrix();
+    template <typename Y>
+    FixedSizeMatrix(const FixedSizeMatrix<Y, R, C> &m);
 
-  void fillBufferWithData(uint8_t *const buffer) const;
+    void fillBufferWithData(uint8_t *const buffer) const;
 
-  T &operator()(const size_t r, const size_t c);
-  const T &operator()(const size_t r, const size_t c) const;
+    T &operator()(const size_t r, const size_t c);
+    const T &operator()(const size_t r, const size_t c) const;
 
-  size_t numRows() const;
-  size_t numCols() const;
-  size_t size() const;
-  size_t numElements() const;
-  size_t numBytes() const;
+    size_t numRows() const;
+    size_t numCols() const;
+    size_t size() const;
+    size_t numElements() const;
+    size_t numBytes() const;
 
-  void fill(const T val);
-  T *data() const;
-  // Matrix<T, C, R> getTranspose() const;
+    void fill(const T val);
+    T *data() const;
+    // Matrix<T, C, R> getTranspose() const;
 
-  T max() const;
-  T min() const;
-  T sum() const;
+    T max() const;
+    T min() const;
+    T sum() const;
 
-  FixedSizeMatrix<T, R, C> transposed() const;
-};
+    Matrix<T> toMatrix() const
+    {
+      Matrix<T> matrix(R, C);
+      for (size_t r = 0; r < R; ++r)
+      {
+        for (size_t c = 0; c < C; ++c)
+        {
+          matrix(r, c) = data_[r * C + c];
+        }
+      }
+      return matrix;
+    }
+
+    FixedSizeMatrix<T, R, C> transposed() const;
+  };
 
 } // namespace lumos
 
