@@ -3,11 +3,47 @@
 
 #include <assert.h>
 
+#include <optional>
+
 #include "logging.h"
 #include "math/misc/forward_decl.h"
 
 namespace lumos
 {
+
+  enum class MatrixNormType
+  {
+    Frobenius,
+    L1,
+    Infinity,
+    MaxAbs
+  };
+
+  template <typename T, uint16_t R, uint16_t C>
+  struct LUMatrices
+  {
+    static constexpr uint16_t K = (R < C) ? R : C;
+
+    FixedSizeMatrix<T, R, K> l_matrix;
+    FixedSizeMatrix<T, K, C> u_matrix;
+    FixedSizeVector<uint16_t, R> row_permutation; // maps row i in PA = LU
+  };
+
+  template <typename T, uint16_t R, uint16_t C>
+  struct SVDMatrices
+  {
+    FixedSizeMatrix<T, R, R> u_matrix;
+    FixedSizeMatrix<T, R, C> sigma_matrix;
+    FixedSizeMatrix<T, C, C> v_matrix;
+  };
+
+  template <typename T, uint16_t R, uint16_t C>
+  struct QRResult
+  {
+    FixedSizeMatrix<T, R, C> q; // Orthogonal (R×C for economy form)
+    FixedSizeMatrix<T, C, C> r; // Upper triangular
+  };
+
   template <typename T, uint16_t R, uint16_t C>
   class FixedSizeMatrix
   {
@@ -51,7 +87,14 @@ namespace lumos
       return matrix;
     }
 
-    FixedSizeMatrix<T, R, C> transposed() const;
+    FixedSizeMatrix<T, C, R> transposed() const;
+
+    std::optional<FixedSizeMatrix<T, R, C>> inverse() const;
+    std::optional<LUMatrices<T, R, C>> luDecomposition() const;
+    std::optional<SVDMatrices<T, R, C>> svd() const;
+    std::optional<QRResult<T, R, C>> qrDecomposition() const;
+
+    T norm(const FixedSizeMatrix<T, R, C> &m, MatrixNormType type) const;
   };
 
 } // namespace lumos

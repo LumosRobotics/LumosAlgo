@@ -35,6 +35,8 @@ namespace lumos
 
     template <typename T, uint16_t N>
     class FixedSizeVector;
+    template <typename T, uint16_t R, uint16_t C>
+    class FixedSizeMatrix;
 
     template <typename T>
     struct Line3D;
@@ -69,7 +71,11 @@ namespace lumos
     using PointYZ = VecYZ<T>;
 
     template <typename T>
-    struct Quaternion;
+    class Quaternion;
+    template <typename T>
+    class EulerAngles;
+    template <typename T>
+    struct AxisAngle;
 
 } // namespace lumos
 
