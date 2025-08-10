@@ -519,6 +519,111 @@ namespace lumos
     return result;
   }
 
+  // Frobenius norm
+  template <typename T, uint16_t R, uint16_t C>
+  T FixedSizeMatrix<T, R, C>::frobeniusNorm() const
+  {
+    T sum_sq = 0;
+    for (uint16_t i = 0; i < R * C; ++i)
+    {
+      sum_sq += data_[i] * data_[i];
+    }
+    return std::sqrt(sum_sq);
+  }
+
+  // 1-norm (max column sum)
+  template <typename T, uint16_t R, uint16_t C>
+  T FixedSizeMatrix<T, R, C>::oneNorm() const
+  {
+    T max_sum = 0;
+    for (uint16_t col = 0; col < C; ++col)
+    {
+      T col_sum = 0;
+      for (uint16_t row = 0; row < R; ++row)
+      {
+        col_sum += std::abs((*this)(row, col));
+      }
+      max_sum = std::max(max_sum, col_sum);
+    }
+    return max_sum;
+  }
+
+  // Infinity norm (max row sum)
+  template <typename T, uint16_t R, uint16_t C>
+  T FixedSizeMatrix<T, R, C>::infNorm() const
+  {
+    T max_sum = 0;
+    for (uint16_t row = 0; row < R; ++row)
+    {
+      T row_sum = 0;
+      for (uint16_t col = 0; col < C; ++col)
+      {
+        row_sum += std::abs((*this)(row, col));
+      }
+      max_sum = std::max(max_sum, row_sum);
+    }
+    return max_sum;
+  }
+
+  // General p-norm (vectorized over all elements)
+  template <typename T, uint16_t R, uint16_t C>
+  T FixedSizeMatrix<T, R, C>::pNorm(const T p) const
+  {
+    if (p <= 0)
+    {
+      return std::numeric_limits<T>::quiet_NaN();
+    }
+    T sum = 0;
+    for (uint16_t i = 0; i < R * C; ++i)
+    {
+      sum += std::pow(std::abs(data_[i]), p);
+    }
+    return std::pow(sum, T(1) / p);
+  }
+
+  template <typename T, uint16_t R, uint16_t C>
+  EigenDecomposition<T, R, C> FixedSizeMatrix<T, R, C>::eigen() const
+  {
+    static_assert(R == C, "Matrix must be square for eigen decomposition.");
+    // Dummy implementation: returns a default-constructed EigenDecomposition
+    return EigenDecomposition<T, R, C>{};
+  }
+
+  template <typename T, uint16_t R, uint16_t C>
+  FixedSizeMatrix<T, R, C> FixedSizeMatrix<T, R, C>::cholesky() const
+  {
+    static_assert(R == C, "Matrix must be square for Cholesky decomposition.");
+    // Dummy implementation: returns a unit matrix of the same size
+    return unitMatrix<T, R, C>();
+  }
+
+  /*template <typename T, uint16_t R, uint16_t C>
+  std::optional<T> FixedSizeMatrix<T, R, C>::frobeniusConditionNumber() const
+  {
+    auto inv_opt = inverse();
+    if (!inv_opt.has_value())
+      return std::nullopt;
+    return frobeniusNorm() * inv_opt->frobeniusNorm();
+  }
+
+  template <typename T, uint16_t R, uint16_t C>
+  std::optional<T> FixedSizeMatrix<T, R, C>::l1NormConditionNumber() const
+  {
+    auto inv_opt = inverse();
+    if (!inv_opt.has_value())
+      return std::nullopt;
+    return oneNorm() * inv_opt->oneNorm();
+  }
+
+  template <typename T, uint16_t R, uint16_t C>
+  std::optional<T> FixedSizeMatrix<T, R, C>::infConditionNumber() const
+  {
+    auto inv_opt = inverse();
+    if (!inv_opt.has_value())
+      return std::nullopt;
+    return norm_inf() * inv_opt->norm_inf();
+  }*/
+
   /*template <typename T, uint16_t R, uint16_t C> FixedSizeMatrix<T, R, C>
   operator+(const FixedSizeMatrix<T, R, C>& m0, const FixedSizeMatrix<T, R, C>&
   m1)

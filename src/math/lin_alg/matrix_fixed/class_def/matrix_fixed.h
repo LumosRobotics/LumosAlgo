@@ -4,20 +4,13 @@
 #include <assert.h>
 
 #include <optional>
+#include <complex>
 
 #include "logging.h"
 #include "math/misc/forward_decl.h"
 
 namespace lumos
 {
-
-  enum class MatrixNormType
-  {
-    Frobenius,
-    L1,
-    Infinity,
-    MaxAbs
-  };
 
   template <typename T, uint16_t R, uint16_t C>
   struct LUMatrices
@@ -42,6 +35,14 @@ namespace lumos
   {
     FixedSizeMatrix<T, R, C> q; // Orthogonal (R×C for economy form)
     FixedSizeMatrix<T, C, C> r; // Upper triangular
+  };
+
+  template <typename T, uint16_t R, uint16_t C>
+  struct EigenDecomposition
+  {
+    static_assert(R == C, "Eigen decomposition requires square matrix");
+    FixedSizeMatrix<std::complex<T>, R, R> eigenvectors;
+    FixedSizeVector<std::complex<T>, R> eigenvalues;
   };
 
   template <typename T, uint16_t R, uint16_t C>
@@ -94,7 +95,18 @@ namespace lumos
     std::optional<SVDMatrices<T, R, C>> svd() const;
     std::optional<QRResult<T, R, C>> qrDecomposition() const;
 
-    T norm(const FixedSizeMatrix<T, R, C> &m, MatrixNormType type) const;
+    EigenDecomposition<T, R, C> eigen() const;
+    FixedSizeMatrix<T, R, C> cholesky() const;
+
+    T frobeniusNorm() const;
+    T oneNorm() const;
+    T infNorm() const;
+    T pNorm(T p) const;
+
+    // --- Condition number functions ---
+    std::optional<T> condition_number_frobenius() const;
+    std::optional<T> condition_number_l1() const;
+    std::optional<T> condition_number_inf() const;
   };
 
 } // namespace lumos
