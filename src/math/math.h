@@ -24,12 +24,12 @@
 // #include "math/geometry/plane.h"
 // #include "math/geometry/triangle.h"
 
-// #include "math/structures/index_triplet.h"
+#include "math/structures/index_triplet.h"
 
-// #include "math/image/image_gray.h"
-// #include "math/image/image_gray_alpha.h"
-// #include "math/image/image_rgb.h"
-// #include "math/image/image_rgba.h"
+#include "math/image/image_gray.h"
+#include "math/image/image_gray_alpha.h"
+#include "math/image/image_rgb.h"
+#include "math/image/image_rgba.h"
 
 #include "math/transformations/quaternion.h"
 #include "math/curves/curves.h"

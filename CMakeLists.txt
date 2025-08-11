@@ -27,13 +27,18 @@ include_directories(${CMAKE_SOURCE_DIR}/external/nlohmann/include)
 
 add_compile_options(-Wall -Wextra -pedantic)
 
+# STB
+set(STB_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/external/stb)
+
 # Include
 include_directories(${CMAKE_SOURCE_DIR}/src/)
+include_directories(${STB_SOURCE_DIR})
 
 # Enable testing
 enable_testing()
 
 add_subdirectory(src/applications/simple)
+add_subdirectory(src/applications/image)
 add_subdirectory(src/math/curves/test)
 add_subdirectory(src/math/lin_alg/fixed_size_vector/test)
 add_subdirectory(src/math/lin_alg/matrix_fixed/test)
