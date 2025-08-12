@@ -1,0 +1,15 @@
+cmake -DBUILD_LIST=core,imgcodecs,highgui,imgproc \
+  -DBUILD_TESTS=OFF \
+  -DBUILD_DOCS=OFF \
+  -DBUILD_EXAMPLES=OFF \
+  -DBUILD_PERF_TESTS=OFF \
+  -DBUILD_opencv_python2=OFF \
+  -DBUILD_opencv_python3=OFF \
+  -DBUILD_opencv_python_bindings_generator=OFF \
+  -DWITH_QT=OFF \
+  -DWITH_COCOA=ON \
+  -DWITH_GTK=OFF \
+  -DWITH_FFMPEG=ON \
+  -DWITH_JPEG=ON \
+  -DWITH_PNG=ON \
+  -DWITH_TIFF=ON ..

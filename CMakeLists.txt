@@ -14,6 +14,12 @@ set(CMAKE_BUILD_TYPE Debug)
 # Optionally define a version
 set(PROJECT_VERSION "1.0.0")
 
+# OpenCV
+# set(OpenCV_DIR "${CMAKE_SOURCE_DIR}/src/external/opencv/build/" CACHE PATH "Path to local OpenCVConfig.cmake")
+# find_package(OpenCV REQUIRED)
+# message(STATUS "OpenCV version: ${OpenCV_VERSION}")
+# message(STATUS "OpenCV include directories: ${OpenCV_INCLUDE_DIRS}")
+
 # Googletest
 link_directories(${CMAKE_SOURCE_DIR}/src/external/googletest/lib)
 include_directories(${CMAKE_SOURCE_DIR}/src/external/googletest/googletest/include)
