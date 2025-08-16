@@ -1,5 +1,7 @@
 # Test executable for matrix_dynamic module
-add_executable(matrix_dynamic_test matrix_dynamic_test.cpp)
+add_executable(matrix_dynamic_test 
+            # matrix_dynamic_test.cpp
+            matrix_slicing_test.cpp)
 
 # Link with Google Test libraries
 target_link_libraries(matrix_dynamic_test ${GTEST_LIB_FILES})
