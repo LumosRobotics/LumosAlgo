@@ -139,13 +139,13 @@ namespace lumos
   // Supports selectors: All, End, RangeInclusive (via 0_i <= 4_i), Indices, size_t
 
   // ---------------------------- Selectors ----------------------------------
+
   struct All
   {
   };
   struct End
   {
   };
-
   struct RangeInclusive
   {
     std::size_t first;
@@ -171,114 +171,134 @@ namespace lumos
     Indices(std::vector<std::size_t> v) : values(std::move(v)) {}
   };
 
-  // ------------------------- forward declarations ---------------------------
-
-  template <typename T>
-  class MatrixGenericSlice;
-
-  // ------------------------- Resolve selectors ------------------------------
-
-  inline std::vector<std::size_t> resolve_indices(All, std::size_t dim)
+  namespace internal
   {
-    std::vector<std::size_t> idx(dim);
-    for (std::size_t i = 0; i < dim; ++i)
-      idx[i] = i;
-    return idx;
-  }
+    // ------------------------- forward declarations ---------------------------
 
-  inline std::vector<std::size_t> resolve_indices(End, std::size_t dim)
-  {
-    if (dim == 0)
-      throw std::out_of_range("End on empty dimension");
-    return std::vector<std::size_t>{dim - 1};
-  }
+    template <typename T>
+    class MatrixGenericSlice;
 
-  inline std::vector<std::size_t> resolve_indices(std::size_t single, std::size_t dim)
-  {
-    if (single >= dim)
-      throw std::out_of_range("Index out of range");
-    return std::vector<std::size_t>{single};
-  }
+    // ------------------------- Resolve selectors ------------------------------
 
-  inline std::vector<std::size_t> resolve_indices(const RangeInclusive &r, std::size_t dim)
-  {
-    if (r.first > r.last || r.last >= dim)
-      throw std::out_of_range("RangeInclusive out of bounds");
-    std::vector<std::size_t> idx(r.last - r.first + 1);
-    for (std::size_t i = 0; i < idx.size(); ++i)
+    inline std::vector<std::size_t> resolve_indices(All, std::size_t dim)
     {
-      idx[i] = r.first + i;
+      std::vector<std::size_t> idx(dim);
+      for (std::size_t i = 0; i < dim; ++i)
+      {
+        idx[i] = i;
+      }
+      return idx;
     }
-    return idx;
-  }
 
-  inline std::vector<std::size_t> resolve_indices(const Indices &ind, std::size_t dim)
-  {
-    for (auto i : ind.values)
+    inline std::vector<std::size_t> resolve_indices(End, std::size_t dim)
     {
-      if (i >= dim)
+      if (dim == 0)
+      {
+        throw std::out_of_range("End on empty dimension");
+      }
+      return std::vector<std::size_t>{dim - 1};
+    }
+
+    inline std::vector<std::size_t> resolve_indices(std::size_t single, std::size_t dim)
+    {
+      if (single >= dim)
       {
         throw std::out_of_range("Index out of range");
       }
-    }
-    return ind.values;
-  }
-
-  template <typename T>
-  class MatrixGenericSlice
-  {
-  private:
-    T *parent_data_ = nullptr;
-    std::vector<std::size_t> row_indices_;
-    std::vector<std::size_t> col_indices_;
-    std::size_t parent_stride_ = 0; // number of columns in parent
-
-  public:
-    MatrixGenericSlice(T *data,
-                       std::vector<std::size_t> rows,
-                       std::vector<std::size_t> cols,
-                       std::size_t stride)
-        : parent_data_(data), row_indices_(std::move(rows)), col_indices_(std::move(cols)), parent_stride_(stride) {}
-
-    std::size_t numRows() const { return row_indices_.size(); }
-    std::size_t numCols() const { return col_indices_.size(); }
-
-    // element access (mapped into parent storage)
-    T &operator()(std::size_t r, std::size_t c)
-    {
-      return parent_data_[row_indices_[r] * parent_stride_ + col_indices_[c]];
-    }
-    const T &operator()(std::size_t r, std::size_t c) const
-    {
-      return parent_data_[row_indices_[r] * parent_stride_ + col_indices_[c]];
+      return std::vector<std::size_t>{single};
     }
 
-    // assign from any matrix-like object that provides numRows(), numCols(), operator()
-    template <typename MatLike>
-    MatrixGenericSlice &operator=(const MatLike &other)
+    inline std::vector<std::size_t> resolve_indices(const RangeInclusive &r, std::size_t dim)
     {
-      if (other.numRows() != numRows() || other.numCols() != numCols())
-        throw std::runtime_error("slice assignment size mismatch");
-      for (std::size_t r = 0; r < numRows(); ++r)
+      if (r.first > r.last || r.last >= dim)
       {
-        for (std::size_t c = 0; c < numCols(); ++c)
+        throw std::out_of_range("RangeInclusive out of bounds");
+      }
+      std::vector<std::size_t> idx(r.last - r.first + 1);
+      for (std::size_t i = 0; i < idx.size(); ++i)
+      {
+        idx[i] = r.first + i;
+      }
+      return idx;
+    }
+
+    inline std::vector<std::size_t> resolve_indices(const Indices &ind, std::size_t dim)
+    {
+      for (auto i : ind.values)
+      {
+        if (i >= dim)
         {
-          (*this)(r, c) = other(r, c);
+          throw std::out_of_range("Index out of range");
         }
       }
-      return *this;
+      return ind.values;
     }
 
-    // Allow assigning from raw scalar if the slice is a single element
-    MatrixGenericSlice &operator=(const T &scalar)
+    template <typename T>
+    class MatrixGenericSlice
     {
-      if (numRows() != 1 || numCols() != 1)
-        throw std::runtime_error("scalar assign size mismatch");
-      (*this)(0, 0) = scalar;
-      return *this;
-    }
-  };
+    private:
+      T *parent_data_ = nullptr;
+      std::vector<std::size_t> row_indices_;
+      std::vector<std::size_t> col_indices_;
+      std::size_t parent_stride_ = 0; // number of columns in parent
 
+    public:
+      MatrixGenericSlice(T *data,
+                         std::vector<std::size_t> rows,
+                         std::vector<std::size_t> cols,
+                         std::size_t stride)
+          : parent_data_(data), row_indices_(std::move(rows)), col_indices_(std::move(cols)), parent_stride_(stride) {}
+
+      std::size_t numRows() const { return row_indices_.size(); }
+      std::size_t numCols() const { return col_indices_.size(); }
+
+      // element access (mapped into parent storage)
+      T &operator()(std::size_t r, std::size_t c)
+      {
+        return parent_data_[row_indices_[r] * parent_stride_ + col_indices_[c]];
+      }
+      const T &operator()(std::size_t r, std::size_t c) const
+      {
+        return parent_data_[row_indices_[r] * parent_stride_ + col_indices_[c]];
+      }
+
+      // assign from any matrix-like object that provides numRows(), numCols(), operator()
+      template <typename MatLike>
+      MatrixGenericSlice &operator=(const MatLike &other)
+      {
+        if (other.numRows() != numRows() || other.numCols() != numCols())
+          throw std::runtime_error("slice assignment size mismatch");
+        for (std::size_t r = 0; r < numRows(); ++r)
+        {
+          for (std::size_t c = 0; c < numCols(); ++c)
+          {
+            (*this)(r, c) = other(r, c);
+          }
+        }
+        return *this;
+      }
+
+      // inside internal::MatrixGenericSlice<T>
+      operator Matrix<T>() const
+      {
+        Matrix<T> out(numRows(), numCols());
+        for (size_t r = 0; r < numRows(); ++r)
+          for (size_t c = 0; c < numCols(); ++c)
+            out(r, c) = (*this)(r, c);
+        return out;
+      }
+
+      // Allow assigning from raw scalar if the slice is a single element
+      MatrixGenericSlice &operator=(const T &scalar)
+      {
+        if (numRows() != 1 || numCols() != 1)
+          throw std::runtime_error("scalar assign size mismatch");
+        (*this)(0, 0) = scalar;
+        return *this;
+      }
+    };
+  }
   template <typename T>
   class MatrixConstView
   {
@@ -383,6 +403,20 @@ namespace lumos
     Matrix<T> &operator=(const Matrix<T> &m);
     Matrix<T> &operator=(Matrix<T> &&m);
 
+    Matrix<T> &operator=(const internal::MatrixGenericSlice<T> &m)
+    {
+      if (m.numRows() != numRows() || m.numCols() != numCols())
+        throw std::runtime_error("Matrix assignment size mismatch");
+      for (size_t r = 0; r < numRows(); ++r)
+      {
+        for (size_t c = 0; c < numCols(); ++c)
+        {
+          (*this)(r, c) = m(r, c);
+        }
+      }
+      return *this;
+    }
+
     MatrixView<T> view() const { return MatrixView{data_, num_rows_, num_cols_}; }
 
     MatrixConstView<T> constView() const
@@ -390,21 +424,22 @@ namespace lumos
       return MatrixConstView{data_, num_rows_, num_cols_};
     }
 
+    // non-const: slicing for assignment (LHS)
     template <typename RowSel, typename ColSel>
-    MatrixGenericSlice<T> operator()(const RowSel &rsel, const ColSel &csel)
+    internal::MatrixGenericSlice<T> operator()(const RowSel &rsel, const ColSel &csel)
     {
-      auto rows = resolve_indices(rsel, num_rows_);
-      auto cols = resolve_indices(csel, num_cols_);
-      return MatrixGenericSlice<T>(data_, std::move(rows), std::move(cols), num_cols_);
+      auto rows = internal::resolve_indices(rsel, num_rows_);
+      auto cols = internal::resolve_indices(csel, num_cols_);
+      return internal::MatrixGenericSlice<T>(data_, std::move(rows), std::move(cols), num_cols_);
     }
 
-    // const version to allow binding to const matrices
+    // const: slicing produces a copy (RHS, auto, direct init)
     template <typename RowSel, typename ColSel>
-    const MatrixGenericSlice<T> operator()(const RowSel &rsel, const ColSel &csel) const
+    Matrix<T> operator()(const RowSel &rsel, const ColSel &csel) const
     {
-      auto rows = resolve_indices(rsel, num_rows_);
-      auto cols = resolve_indices(csel, num_cols_);
-      return MatrixGenericSlice<T>(data_, std::move(rows), std::move(cols), num_cols_);
+      auto rows = internal::resolve_indices(rsel, num_rows_);
+      auto cols = internal::resolve_indices(csel, num_cols_);
+      return Matrix<T>(internal::MatrixGenericSlice<T>(data_, std::move(rows), std::move(cols), num_cols_));
     }
 
     void resize(const size_t num_rows, const size_t num_cols);
