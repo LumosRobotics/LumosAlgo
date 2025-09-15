@@ -1,0 +1,33 @@
+{
+    "an_int": 42,
+    "a_negative_int": -7,
+    "null_value": null,
+    "a_string": "hello",
+    "a_bool": true,
+    "a_float": 3.14,
+    "an_array": [
+        1,
+        2,
+        3,
+        4
+    ],
+    "an_object": {
+        "key": "value"
+    },
+    "nested": {
+        "nested_value": "nested_string_value",
+        "nested_array": [
+            5,
+            6,
+            7
+        ]
+    },
+    "array_of_objects": [
+        {
+            "obj_key1": "obj_value1"
+        },
+        {
+            "obj_key1": "obj_value2"
+        }
+    ]
+}

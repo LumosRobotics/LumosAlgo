@@ -1,0 +1,6 @@
+This is line 1
+This is line 2 with spaces   
+This is line 3
+
+This is line 5 (line 4 was empty)
+Last line with no newline
