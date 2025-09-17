@@ -17,13 +17,8 @@ namespace lumos
         protected:
             void SetUp() override
             {
-                // Save original settings
-                original_use_colors_ = internal::getUseColors();
-                original_show_file_ = internal::getShowFile();
-                original_show_func_ = internal::getShowFunc();
-                original_show_line_ = internal::getShowLineNumber();
-                original_show_thread_ = internal::getShowThreadId();
-                original_output_stream_ = internal::getOutputStream();
+                // Save original settings using the optimized method
+                original_settings_ = internal::LoggingConfig::instance().getAllSettings();
 
                 // Set up test stream
                 test_stream_.str("");
@@ -41,12 +36,12 @@ namespace lumos
             void TearDown() override
             {
                 // Restore original settings
-                internal::setUseColors(original_use_colors_);
-                internal::setShowFile(original_show_file_);
-                internal::setShowFunc(original_show_func_);
-                internal::setShowLineNumber(original_show_line_);
-                internal::setShowThreadId(original_show_thread_);
-                internal::setOutputStream(original_output_stream_);
+                internal::setUseColors(original_settings_.use_colors);
+                internal::setShowFile(original_settings_.show_file);
+                internal::setShowFunc(original_settings_.show_func);
+                internal::setShowLineNumber(original_settings_.show_line_number);
+                internal::setShowThreadId(original_settings_.show_thread_id);
+                internal::setOutputStream(original_settings_.output_stream);
             }
 
             std::string getLastLogOutputAndClearStream()
@@ -59,12 +54,7 @@ namespace lumos
 
         private:
             std::ostringstream test_stream_;
-            bool original_use_colors_;
-            bool original_show_file_;
-            bool original_show_func_;
-            bool original_show_line_;
-            bool original_show_thread_;
-            std::ostream *original_output_stream_;
+            internal::LoggingConfig::Settings original_settings_;
         };
 
         // Test basic logging functionality
@@ -263,6 +253,124 @@ namespace lumos
                 EXPECT_STRNE(color, "UNKNOWNSEVERITYCOLOR");
                 EXPECT_STRNE(name, "UNKNOWNSEVERITY");
             }
+        }
+
+        // Test reset functionality
+        TEST_F(LoggingTest, ResetFunctionality)
+        {
+            // Change all settings
+            internal::setUseColors(false);
+            internal::setShowFile(false);
+            internal::setShowFunc(false);
+            internal::setShowLineNumber(false);
+            internal::setShowThreadId(false);
+            internal::setConfigurableAssertion(true);
+            
+            std::ostringstream custom_stream;
+            internal::setOutputStream(&custom_stream);
+            
+            // Reset to defaults
+            resetToDefaults();
+            
+            // Verify all settings are back to defaults
+            EXPECT_TRUE(internal::getUseColors());
+            EXPECT_TRUE(internal::getShowFile());
+            EXPECT_TRUE(internal::getShowFunc());
+            EXPECT_TRUE(internal::getShowLineNumber());
+            EXPECT_TRUE(internal::getShowThreadId());
+            EXPECT_FALSE(internal::getConfigurableAssertion());
+            
+            // Output stream should be back to cout
+            auto stream = internal::getOutputStream();
+            EXPECT_EQ(stream.get(), &std::cout);
+        }
+        
+        // Test improved singleton thread safety
+        TEST_F(LoggingTest, SingletonThreadSafety)
+        {
+            // Test that multiple threads can safely access the singleton
+            std::vector<std::thread> threads;
+            std::atomic<int> success_count{0};
+            
+            for (int i = 0; i < 10; ++i) {
+                threads.emplace_back([&success_count]() {
+                    try {
+                        auto& config1 = internal::LoggingConfig::instance();
+                        auto& config2 = internal::LoggingConfig::instance();
+                        
+                        // Should be the same instance
+                        if (&config1 == &config2) {
+                            success_count++;
+                        }
+                        
+                        // Test concurrent reads
+                        for (int j = 0; j < 100; ++j) {
+                            config1.getUseColors();
+                            config1.getShowFile();
+                            config1.getAllSettings();
+                        }
+                    } catch (...) {
+                        // Should not throw
+                    }
+                });
+            }
+            
+            for (auto& thread : threads) {
+                thread.join();
+            }
+            
+            EXPECT_EQ(success_count.load(), 10);
+        }
+
+        // Test atomic operations performance
+        TEST_F(LoggingTest, AtomicOperationsPerformance)
+        {
+            // This test ensures atomic operations work correctly under load
+            std::vector<std::thread> readers;
+            std::vector<std::thread> writers;
+            std::atomic<bool> stop{false};
+            std::atomic<int> read_count{0};
+            std::atomic<int> write_count{0};
+            
+            // Start reader threads
+            for (int i = 0; i < 4; ++i) {
+                readers.emplace_back([&stop, &read_count]() {
+                    while (!stop.load()) {
+                        internal::getUseColors();
+                        internal::getShowFile();
+                        internal::getShowFunc();
+                        read_count++;
+                    }
+                });
+            }
+            
+            // Start writer threads
+            for (int i = 0; i < 2; ++i) {
+                writers.emplace_back([&stop, &write_count, i]() {
+                    while (!stop.load()) {
+                        internal::setUseColors(i % 2 == 0);
+                        internal::setShowFile(i % 2 == 1);
+                        write_count++;
+                        std::this_thread::sleep_for(std::chrono::microseconds(10));
+                    }
+                });
+            }
+            
+            // Let it run for a short time
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            stop.store(true);
+            
+            // Wait for all threads
+            for (auto& thread : readers) {
+                thread.join();
+            }
+            for (auto& thread : writers) {
+                thread.join();
+            }
+            
+            // Should have performed many operations without issues
+            EXPECT_GT(read_count.load(), 0);
+            EXPECT_GT(write_count.load(), 0);
         }
 
     } // namespace logging

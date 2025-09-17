@@ -4,12 +4,14 @@
 #include <sys/time.h>
 
 #include <array>
+#include <atomic>
 #include <chrono>
 #include <csignal>
 #include <cstdarg>
 #include <cstdio>
 #include <functional>
 #include <iostream>
+#include <memory>
 #include <mutex>
 #include <sstream>
 #include <string>
@@ -91,130 +93,194 @@ inline size_t getThreadId() {
   return cached_id;
 }
 
-// Global variables
+// Improved Singleton Configuration
+class LoggingConfig {
+public:
+    static LoggingConfig& instance() {
+        static LoggingConfig config;
+        return config;
+    }
+    
+    // Non-copyable, non-movable
+    LoggingConfig(const LoggingConfig&) = delete;
+    LoggingConfig& operator=(const LoggingConfig&) = delete;
+    LoggingConfig(LoggingConfig&&) = delete;
+    LoggingConfig& operator=(LoggingConfig&&) = delete;
+    
+    // Lockless atomic operations for frequently read settings
+    bool getUseColors() const { return use_colors_.load(std::memory_order_relaxed); }
+    void setUseColors(bool value) { use_colors_.store(value, std::memory_order_relaxed); }
+    
+    bool getShowFile() const { return show_file_.load(std::memory_order_relaxed); }
+    void setShowFile(bool value) { show_file_.store(value, std::memory_order_relaxed); }
+    
+    bool getShowFunc() const { return show_func_.load(std::memory_order_relaxed); }
+    void setShowFunc(bool value) { show_func_.store(value, std::memory_order_relaxed); }
+    
+    bool getShowLineNumber() const { return show_line_number_.load(std::memory_order_relaxed); }
+    void setShowLineNumber(bool value) { show_line_number_.store(value, std::memory_order_relaxed); }
+    
+    bool getShowThreadId() const { return show_thread_id_.load(std::memory_order_relaxed); }
+    void setShowThreadId(bool value) { show_thread_id_.store(value, std::memory_order_relaxed); }
+    
+    bool getConfigurableAssertion() const { return configurable_assertion_.load(std::memory_order_relaxed); }
+    void setConfigurableAssertion(bool value) { configurable_assertion_.store(value, std::memory_order_relaxed); }
+    
+    // Thread-safe operations for output stream
+    std::shared_ptr<std::ostream> getOutputStream() const {
+        std::lock_guard<std::mutex> lock(stream_mutex_);
+        return output_stream_;
+    }
+    
+    void setOutputStream(std::ostream* stream) {
+        if (!stream) stream = &std::cout;
+        std::lock_guard<std::mutex> lock(stream_mutex_);
+        // Use custom deleter that doesn't delete std::cout/std::cerr
+        output_stream_ = std::shared_ptr<std::ostream>(stream, [](std::ostream*){});
+    }
+    
+    void setOutputStream(std::shared_ptr<std::ostream> stream) {
+        if (!stream) {
+            stream = std::shared_ptr<std::ostream>(&std::cout, [](std::ostream*){});
+        }
+        std::lock_guard<std::mutex> lock(stream_mutex_);
+        output_stream_ = stream;
+    }
+    
+    // Reset to defaults (useful for testing)
+    void resetToDefaults() {
+        use_colors_.store(true, std::memory_order_relaxed);
+        show_file_.store(true, std::memory_order_relaxed);
+        show_func_.store(true, std::memory_order_relaxed);
+        show_line_number_.store(true, std::memory_order_relaxed);
+        show_thread_id_.store(true, std::memory_order_relaxed);
+        configurable_assertion_.store(false, std::memory_order_relaxed);
+        
+        std::lock_guard<std::mutex> lock(stream_mutex_);
+        output_stream_ = std::shared_ptr<std::ostream>(&std::cout, [](std::ostream*){});
+    }
+    
+    // Optimized method to read all settings atomically for getPreString
+    struct Settings {
+        bool use_colors;
+        bool show_file;
+        bool show_func;
+        bool show_line_number;
+        bool show_thread_id;
+        std::shared_ptr<std::ostream> output_stream;
+    };
+    
+    Settings getAllSettings() const {
+        Settings settings;
+        settings.use_colors = use_colors_.load(std::memory_order_relaxed);
+        settings.show_file = show_file_.load(std::memory_order_relaxed);
+        settings.show_func = show_func_.load(std::memory_order_relaxed);
+        settings.show_line_number = show_line_number_.load(std::memory_order_relaxed);
+        settings.show_thread_id = show_thread_id_.load(std::memory_order_relaxed);
+        
+        std::lock_guard<std::mutex> lock(stream_mutex_);
+        settings.output_stream = output_stream_;
+        
+        return settings;
+    }
+    
+private:
+    LoggingConfig() 
+        : use_colors_(true)
+        , show_file_(true)
+        , show_func_(true)
+        , show_line_number_(true)
+        , show_thread_id_(true)
+        , configurable_assertion_(false)
+        , output_stream_(&std::cout, [](std::ostream*){})
+    {}
+    
+    // Atomic settings for lockless reads
+    std::atomic<bool> use_colors_;
+    std::atomic<bool> show_file_;
+    std::atomic<bool> show_func_;
+    std::atomic<bool> show_line_number_;
+    std::atomic<bool> show_thread_id_;
+    std::atomic<bool> configurable_assertion_;
+    
+    // Shared pointer with mutex for thread-safe stream management
+    mutable std::mutex stream_mutex_;
+    std::shared_ptr<std::ostream> output_stream_;
+};
 
-inline std::mutex &Variable_thread_mutex() {
-  static std::mutex mtx;
-  return mtx;
-}
-
-inline bool &Variable_use_colors() {
-  static bool use_colors = true;
-  return use_colors;
-}
-
-inline bool &Variable_show_file() {
-  static bool show_file = true;
-  return show_file;
-}
-
-inline bool &Variable_show_func() {
-  static bool show_func = true;
-  return show_func;
-}
-
-inline bool &Variable_show_line_number() {
-  static bool show_line_number = true;
-  return show_line_number;
-}
-
-inline bool &Variable_show_thread_id() {
-  static bool show_thread_id = true;
-  return show_thread_id;
-}
-
-inline std::ostream* &Variable_output_stream() {
-  static std::ostream* output_stream = &std::cout;
-  return output_stream;
-}
-
-inline bool &Variable_configurable_assertion() {
-  static bool configurable_assertion = false;
-  return configurable_assertion;
-}
-
-// Set get for global variables
-
+// Convenience functions for backward compatibility
 inline bool getUseColors() {
-  return Variable_use_colors();
+  return LoggingConfig::instance().getUseColors();
 }
 
 inline void setUseColors(const bool new_val) {
-  std::lock_guard<std::mutex> guard(Variable_thread_mutex());
-  Variable_use_colors() = new_val;
+  LoggingConfig::instance().setUseColors(new_val);
 }
 
 inline bool getShowFunc() {
-  return Variable_show_func();
+  return LoggingConfig::instance().getShowFunc();
 }
 
 inline void setShowFunc(const bool new_val) {
-  std::lock_guard<std::mutex> guard(Variable_thread_mutex());
-  Variable_show_func() = new_val;
+  LoggingConfig::instance().setShowFunc(new_val);
 }
 
 inline bool getShowFile() {
-  return Variable_show_file();
+  return LoggingConfig::instance().getShowFile();
 }
 
 inline void setShowFile(const bool new_val) {
-  std::lock_guard<std::mutex> guard(Variable_thread_mutex());
-  Variable_show_file() = new_val;
+  LoggingConfig::instance().setShowFile(new_val);
 }
 
 inline bool getShowLineNumber() {
-  return Variable_show_line_number();
+  return LoggingConfig::instance().getShowLineNumber();
 }
 
 inline void setShowLineNumber(const bool new_val) {
-  std::lock_guard<std::mutex> guard(Variable_thread_mutex());
-  Variable_show_line_number() = new_val;
+  LoggingConfig::instance().setShowLineNumber(new_val);
 }
 
 inline bool getShowThreadId() {
-  return Variable_show_thread_id();
+  return LoggingConfig::instance().getShowThreadId();
 }
 
 inline void setShowThreadId(const bool new_val) {
-  std::lock_guard<std::mutex> guard(Variable_thread_mutex());
-  Variable_show_thread_id() = new_val;
+  LoggingConfig::instance().setShowThreadId(new_val);
 }
 
-inline std::ostream* getOutputStream() {
-  return Variable_output_stream();
+inline std::shared_ptr<std::ostream> getOutputStream() {
+  return LoggingConfig::instance().getOutputStream();
 }
 
 inline void setOutputStream(std::ostream* stream) {
-  std::lock_guard<std::mutex> guard(Variable_thread_mutex());
-  Variable_output_stream() = stream;
+  LoggingConfig::instance().setOutputStream(stream);
+}
+
+inline void setOutputStream(std::shared_ptr<std::ostream> stream) {
+  LoggingConfig::instance().setOutputStream(stream);
 }
 
 inline bool getConfigurableAssertion() {
-  return Variable_configurable_assertion();
+  return LoggingConfig::instance().getConfigurableAssertion();
 }
 
 inline void setConfigurableAssertion(const bool new_val) {
-  std::lock_guard<std::mutex> guard(Variable_thread_mutex());
-  Variable_configurable_assertion() = new_val;
+  LoggingConfig::instance().setConfigurableAssertion(new_val);
 }
 
 inline std::string getPreString(const MessageSeverity msg_severity,
                                 const char *file_name, const char *func_name,
                                 const int line_number) {
-  // Read all settings atomically to ensure thread safety
-  std::lock_guard<std::mutex> guard(Variable_thread_mutex());
-  const bool use_colors = Variable_use_colors();
-  const bool show_func = Variable_show_func();
-  const bool show_file = Variable_show_file();
-  const bool show_line_number = Variable_show_line_number();
-  const bool show_thread_id = Variable_show_thread_id();
+  // Read all settings atomically with optimized single call
+  const auto settings = LoggingConfig::instance().getAllSettings();
   
   std::ostringstream oss;
   oss.str("");
   oss.str().reserve(256); // Pre-allocate reasonable buffer size
   
   // Add color if enabled
-  if (use_colors) {
+  if (settings.use_colors) {
     oss << getSeverityColor(msg_severity);
   }
   
@@ -222,31 +288,31 @@ inline std::string getPreString(const MessageSeverity msg_severity,
   oss << "[ " << getSeverityString(msg_severity) << " ]";
   
   // Add thread ID if enabled
-  if (show_thread_id) {
+  if (settings.show_thread_id) {
     oss << "[ 0x" << std::hex << getThreadId() << std::dec << " ]";
   }
   
   // Add file if enabled
-  if (show_file) {
+  if (settings.show_file) {
     const char* file_start = strrchr(file_name, '/');
     const char* file_display = file_start ? file_start + 1 : file_name;
     oss << "[ " << file_display << " ]";
   }
   
   // Add function if enabled
-  if (show_func) {
+  if (settings.show_func) {
     oss << "[ " << func_name << " ]";
   }
   
   // Add line number if enabled
-  if (show_line_number) {
+  if (settings.show_line_number) {
     oss << "[ " << line_number << " ]";
   }
   
   oss << ": ";
   
   // Add reset color if enabled
-  if (use_colors) {
+  if (settings.use_colors) {
     oss << getWhiteColorString();
   }
   
@@ -295,16 +361,16 @@ public:
 
   ~Log() {
     if (!assertion_condition_) {
-      auto* output = getOutputStream();
+      auto output = LoggingConfig::instance().getOutputStream();
       *output << pre_string_ + string_stream_.str() << std::endl;
-      if (getConfigurableAssertion()) {
+      if (LoggingConfig::instance().getConfigurableAssertion()) {
         std::terminate();
       } else {
         raise(SIGABRT);
       }
     } else {
       if (should_print_) {
-        auto* output = getOutputStream();
+        auto output = LoggingConfig::instance().getOutputStream();
         *output << pre_string_ + string_stream_.str() << std::endl;
       }
     }
@@ -345,6 +411,10 @@ inline void setOutputStream(std::ostream* stream) {
 
 inline void setConfigurableAssertion(const bool enable) {
   lumos::logging::internal::setConfigurableAssertion(enable);
+}
+
+inline void resetToDefaults() {
+  lumos::logging::internal::LoggingConfig::instance().resetToDefaults();
 }
 
 } // namespace logging
