@@ -373,5 +373,193 @@ namespace lumos
             EXPECT_GT(write_count.load(), 0);
         }
 
+        // Test file logging with full path
+        TEST_F(LoggingTest, FileLoggingFullPath)
+        {
+            const std::string test_file = "/tmp/test_logging_full_path.log";
+            
+            // Setup file logging
+            setupLogFile(test_file);
+            setLogToBothConsoleAndFile(false);  // Only to file
+            
+            LUMOS_LOG_INFO() << "Test message to file";
+            LUMOS_LOG_ERROR() << "Error message to file";
+            
+            // Disable file logging to flush and close file
+            disableFileLogging();
+            
+            // Read back the file content
+            std::ifstream file(test_file);
+            ASSERT_TRUE(file.is_open());
+            
+            std::string line;
+            std::vector<std::string> lines;
+            while (std::getline(file, line)) {
+                lines.push_back(line);
+            }
+            file.close();
+            
+            EXPECT_EQ(lines.size(), 2);
+            EXPECT_TRUE(lines[0].find("Test message to file") != std::string::npos);
+            EXPECT_TRUE(lines[0].find("INFO") != std::string::npos);
+            EXPECT_TRUE(lines[1].find("Error message to file") != std::string::npos);
+            EXPECT_TRUE(lines[1].find("ERROR") != std::string::npos);
+            
+            // Clean up
+            std::remove(test_file.c_str());
+        }
+        
+        // Test file logging with directory and pattern
+        TEST_F(LoggingTest, FileLoggingDirectoryPattern)
+        {
+            const std::string log_dir = "/tmp/logging_test";
+            const std::string pattern = "test_app";
+            
+            // Setup file logging with pattern
+            setupLogFile(log_dir, pattern);
+            setLogToBothConsoleAndFile(false);  // Only to file
+            
+            LUMOS_LOG_WARNING() << "Warning message with pattern";
+            
+            // Get the generated file streams to verify file was created
+            auto streams = internal::LoggingConfig::instance().getOutputStreams();
+            EXPECT_EQ(streams.size(), 1);  // Should only have file stream
+            
+            disableFileLogging();
+            
+            // Check that a file was created in the directory with the expected pattern
+            std::string cmd = "ls " + log_dir + "/test_app_*.log 2>/dev/null | wc -l";
+            FILE* pipe = popen(cmd.c_str(), "r");
+            if (pipe) {
+                char buffer[128];
+                std::string result = "";
+                while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+                    result += buffer;
+                }
+                pclose(pipe);
+                
+                int file_count = std::stoi(result);
+                EXPECT_GT(file_count, 0);
+            }
+            
+            // Clean up
+            std::string cleanup_cmd = "rm -rf " + log_dir;
+            std::system(cleanup_cmd.c_str());
+        }
+        
+        // Test file logging with custom timestamp pattern
+        TEST_F(LoggingTest, FileLoggingCustomTimestamp)
+        {
+            const std::string log_dir = "/tmp/logging_test_custom";
+            const std::string pattern = "app_%Y-%m-%d_%H-%M";
+            
+            setupLogFile(log_dir, pattern);
+            setLogToBothConsoleAndFile(false);
+            
+            LUMOS_LOG_DEBUG() << "Debug with custom timestamp";
+            
+            disableFileLogging();
+            
+            // Check that file was created with custom timestamp format
+            std::string cmd = "ls " + log_dir + "/app_*.log 2>/dev/null | wc -l";
+            FILE* pipe = popen(cmd.c_str(), "r");
+            if (pipe) {
+                char buffer[128];
+                std::string result = "";
+                while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+                    result += buffer;
+                }
+                pclose(pipe);
+                
+                int file_count = std::stoi(result);
+                EXPECT_GT(file_count, 0);
+            }
+            
+            // Clean up
+            std::string cleanup_cmd = "rm -rf " + log_dir;
+            std::system(cleanup_cmd.c_str());
+        }
+        
+        // Test dual output (console and file)
+        TEST_F(LoggingTest, DualOutput)
+        {
+            const std::string test_file = "/tmp/test_dual_output.log";
+            
+            setupLogFile(test_file);
+            setLogToBothConsoleAndFile(true);  // Both console and file
+            
+            LUMOS_LOG_INFO() << "Dual output message";
+            
+            // Should have both console and file streams
+            auto streams = internal::LoggingConfig::instance().getOutputStreams();
+            EXPECT_EQ(streams.size(), 2);
+            
+            disableFileLogging();
+            
+            // Verify file was written
+            std::ifstream file(test_file);
+            ASSERT_TRUE(file.is_open());
+            
+            std::string content((std::istreambuf_iterator<char>(file)),
+                               std::istreambuf_iterator<char>());
+            file.close();
+            
+            EXPECT_TRUE(content.find("Dual output message") != std::string::npos);
+            
+            // Clean up
+            std::remove(test_file.c_str());
+        }
+        
+        // Test file logging control functions
+        TEST_F(LoggingTest, FileLoggingControl)
+        {
+            // Test getLogToBothConsoleAndFile
+            EXPECT_TRUE(getLogToBothConsoleAndFile());  // Default is true
+            
+            setLogToBothConsoleAndFile(false);
+            EXPECT_FALSE(getLogToBothConsoleAndFile());
+            
+            setLogToBothConsoleAndFile(true);
+            EXPECT_TRUE(getLogToBothConsoleAndFile());
+            
+            // Test disableFileLogging
+            const std::string test_file = "/tmp/test_disable.log";
+            setupLogFile(test_file);
+            
+            auto streams_with_file = internal::LoggingConfig::instance().getOutputStreams();
+            EXPECT_EQ(streams_with_file.size(), 2);  // Console + file
+            
+            disableFileLogging();
+            
+            auto streams_without_file = internal::LoggingConfig::instance().getOutputStreams();
+            EXPECT_EQ(streams_without_file.size(), 1);  // Only console
+        }
+        
+        // Test format strings with file logging
+        TEST_F(LoggingTest, FormatStringsWithFileLogging)
+        {
+            const std::string test_file = "/tmp/test_format_file.log";
+            
+            setupLogFile(test_file);
+            setLogToBothConsoleAndFile(false);
+            
+            LUMOS_LOG_INFOF("Format test: %d %s %.2f", 42, "hello", 3.14159);
+            
+            disableFileLogging();
+            
+            // Read back and verify formatting
+            std::ifstream file(test_file);
+            ASSERT_TRUE(file.is_open());
+            
+            std::string content((std::istreambuf_iterator<char>(file)),
+                               std::istreambuf_iterator<char>());
+            file.close();
+            
+            EXPECT_TRUE(content.find("Format test: 42 hello 3.14") != std::string::npos);
+            
+            // Clean up
+            std::remove(test_file.c_str());
+        }
+
     } // namespace logging
 } // namespace lumos
