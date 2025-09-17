@@ -28,6 +28,18 @@ LUMOS_INLINE Json::Json(bool value) : value_(value) {}
 
 LUMOS_INLINE Json::Json(int value) : value_(static_cast<double>(value)) {}
 
+LUMOS_INLINE Json::Json(unsigned int value) : value_(static_cast<double>(value)) {}
+
+LUMOS_INLINE Json::Json(long value) : value_(static_cast<double>(value)) {}
+
+LUMOS_INLINE Json::Json(unsigned long value) : value_(static_cast<double>(value)) {}
+
+LUMOS_INLINE Json::Json(long long value) : value_(static_cast<double>(value)) {}
+
+LUMOS_INLINE Json::Json(unsigned long long value) : value_(static_cast<double>(value)) {}
+
+LUMOS_INLINE Json::Json(float value) : value_(static_cast<double>(value)) {}
+
 LUMOS_INLINE Json::Json(double value) : value_(value) {}
 
 LUMOS_INLINE Json::Json(const char *value) : value_(std::string(value)) {}
@@ -42,10 +54,31 @@ LUMOS_INLINE Json::Json(std::initializer_list<Json> init_list) : value_(JsonArra
 
 LUMOS_INLINE Json::Json(std::initializer_list<std::pair<std::string, Json>> init_list) : value_(JsonObject(init_list.begin(), init_list.end())) {}
 
+// Assignment operators for initializer lists
+LUMOS_INLINE Json &Json::operator=(std::initializer_list<Json> init_list) {
+    value_ = JsonArray(init_list.begin(), init_list.end());
+    return *this;
+}
+
+LUMOS_INLINE Json &Json::operator=(std::initializer_list<std::pair<std::string, Json>> init_list) {
+    value_ = JsonObject(init_list.begin(), init_list.end());
+    return *this;
+}
+
 // Static factory methods
 LUMOS_INLINE Json Json::FromFile(const std::string &filename)
 {
     return parseJsonFromFile(filename);
+}
+
+LUMOS_INLINE Json Json::Array(std::initializer_list<Json> init_list)
+{
+    return Json(JsonArray(init_list.begin(), init_list.end()));
+}
+
+LUMOS_INLINE Json Json::Object(std::initializer_list<std::pair<std::string, Json>> init_list)
+{
+    return Json(JsonObject(init_list.begin(), init_list.end()));
 }
 
 // Type checking
@@ -569,12 +602,12 @@ LUMOS_INLINE Json &Json::operator[](size_t index)
 {
     if (!isArray())
     {
-        value_ = JsonArray{};
+        throw std::runtime_error("Json is not an array");
     }
     auto &arr = std::get<JsonArray>(value_);
     if (index >= arr.size())
     {
-        arr.resize(index + 1);
+        throw std::out_of_range("Array index out of range");
     }
     return arr[index];
 }
@@ -607,7 +640,14 @@ LUMOS_INLINE Json &Json::operator[](const std::string &key)
 {
     if (!isObject())
     {
-        value_ = JsonObject{};
+        if (isNull())
+        {
+            value_ = JsonObject{};
+        }
+        else
+        {
+            throw std::runtime_error("Json is not an object");
+        }
     }
     return std::get<JsonObject>(value_)[key];
 }
@@ -1073,13 +1113,13 @@ namespace detail
             skipWhitespace(str, pos);
             if (pos >= str.length())
             {
-                throw std::runtime_error("Unexpected end of input in array");
+                break; // Exit loop and throw error below
             }
 
             if (str[pos] == ']')
             {
                 ++pos;
-                break;
+                return array; // Successfully parsed array
             }
             else if (str[pos] == ',')
             {
@@ -1092,7 +1132,8 @@ namespace detail
             }
         }
 
-        return array;
+        // If we exit the loop without finding ']', it's an error
+        throw std::runtime_error("Unexpected end of input in array - missing ']'");
     }
 
     LUMOS_INLINE JsonObject parseObject(const std::string &str, size_t &pos)
@@ -1134,13 +1175,13 @@ namespace detail
             skipWhitespace(str, pos);
             if (pos >= str.length())
             {
-                throw std::runtime_error("Unexpected end of input in object");
+                break; // Exit loop and throw error below
             }
 
             if (str[pos] == '}')
             {
                 ++pos;
-                break;
+                return object; // Successfully parsed object
             }
             else if (str[pos] == ',')
             {
@@ -1153,7 +1194,8 @@ namespace detail
             }
         }
 
-        return object;
+        // If we exit the loop without finding '}', it's an error
+        throw std::runtime_error("Unexpected end of input in object - missing '}'");
     }
 
     LUMOS_INLINE Json parseValue(const std::string &str, size_t &pos)
@@ -1291,7 +1333,9 @@ LUMOS_INLINE Json getValueByPath(const Json &root, const std::string &path)
 
         if (current.isObject() && current.hasKey(key))
         {
-            current = current[key];
+            // Use a temporary const reference to access safely
+            const Json& const_current = current;
+            current = const_current[key];
         }
         else
         {

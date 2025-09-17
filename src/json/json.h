@@ -49,6 +49,12 @@ public:
     Json(std::nullptr_t);
     Json(bool value);
     Json(int value);
+    Json(unsigned int value);
+    Json(long value);
+    Json(unsigned long value);
+    Json(long long value);
+    Json(unsigned long long value);
+    Json(float value);
     Json(double value);
     Json(const char *value);
     Json(const std::string &value);
@@ -64,9 +70,13 @@ public:
     // Assignment operators
     Json &operator=(const Json &other) = default;
     Json &operator=(Json &&other) noexcept = default;
+    Json &operator=(std::initializer_list<Json> init_list);
+    Json &operator=(std::initializer_list<std::pair<std::string, Json>> init_list);
 
     // Static factory methods
     static Json FromFile(const std::string &filename);
+    static Json Array(std::initializer_list<Json> init_list);
+    static Json Object(std::initializer_list<std::pair<std::string, Json>> init_list);
 
     // Type checking
     JsonType getType() const;

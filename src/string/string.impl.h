@@ -404,4 +404,99 @@ LUMOS_INLINE std::string toTitleCase(const std::string& str) {
     return result;
 }
 
+// =============================================================================
+// VECTOR STRING OPERATIONS
+// =============================================================================
+
+LUMOS_INLINE std::vector<std::string> sort(const std::vector<std::string> &strings) {
+    std::vector<std::string> result = strings;
+    std::sort(result.begin(), result.end());
+    return result;
+}
+
+LUMOS_INLINE void sortInPlace(std::vector<std::string> &strings) {
+    std::sort(strings.begin(), strings.end());
+}
+
+LUMOS_INLINE std::vector<std::string> unique(const std::vector<std::string> &strings) {
+    std::vector<std::string> result = strings;
+    std::sort(result.begin(), result.end());
+    result.erase(std::unique(result.begin(), result.end()), result.end());
+    return result;
+}
+
+LUMOS_INLINE std::vector<std::string> padLeft(const std::vector<std::string> &strings, const size_t num_pad_instances, const std::string &pad_str) {
+    std::vector<std::string> result;
+    result.reserve(strings.size());
+    
+    std::string padding = repeat(pad_str, num_pad_instances);
+    
+    for (const auto& str : strings) {
+        result.push_back(padding + str);
+    }
+    
+    return result;
+}
+
+LUMOS_INLINE std::vector<std::string> padLeftUpToTotalLength(const std::vector<std::string> &strings, const size_t total_length, const std::string &pad_str) {
+    std::vector<std::string> result;
+    result.reserve(strings.size());
+    
+    for (const auto& str : strings) {
+        if (str.length() >= total_length) {
+            result.push_back(str);
+        } else {
+            size_t padding_needed = total_length - str.length();
+            size_t pad_instances = (padding_needed + pad_str.length() - 1) / pad_str.length(); // Ceiling division
+            std::string padding = repeat(pad_str, pad_instances);
+            
+            // Trim padding to exact length needed
+            if (padding.length() > padding_needed) {
+                padding = padding.substr(0, padding_needed);
+            }
+            
+            result.push_back(padding + str);
+        }
+    }
+    
+    return result;
+}
+
+LUMOS_INLINE std::vector<std::string> padRight(const std::vector<std::string> &strings, const size_t num_pad_instances, const std::string &pad_str) {
+    std::vector<std::string> result;
+    result.reserve(strings.size());
+    
+    std::string padding = repeat(pad_str, num_pad_instances);
+    
+    for (const auto& str : strings) {
+        result.push_back(str + padding);
+    }
+    
+    return result;
+}
+
+LUMOS_INLINE std::vector<std::string> padRightUpToTotalLength(const std::vector<std::string> &strings, const size_t total_length, const std::string &pad_str) {
+    std::vector<std::string> result;
+    result.reserve(strings.size());
+    
+    for (const auto& str : strings) {
+        if (str.length() >= total_length) {
+            result.push_back(str);
+        } else {
+            size_t padding_needed = total_length - str.length();
+            size_t pad_instances = (padding_needed + pad_str.length() - 1) / pad_str.length(); // Ceiling division
+            std::string padding = repeat(pad_str, pad_instances);
+            
+            // Trim padding to exact length needed
+            if (padding.length() > padding_needed) {
+                padding = padding.substr(0, padding_needed);
+            }
+            
+            result.push_back(str + padding);
+        }
+    }
+    
+    return result;
+}
+
 #endif // STRING_IMPL_H
