@@ -748,6 +748,43 @@ namespace lumos
       __LINE__)                                                             \
       .getStream()
 
+// Color-specific logging macros (INFO level with specific colors)
+#define LUMOS_LOG_RED()                                                      \
+  lumos::logging::internal::Log(                                            \
+      lumos::logging::internal::MessageSeverity::INFO, __FILE__, __func__,  \
+      __LINE__)                                                             \
+      .getStream() << lumos::logging::internal::colors::RED
+
+#define LUMOS_LOG_GREEN()                                                    \
+  lumos::logging::internal::Log(                                            \
+      lumos::logging::internal::MessageSeverity::INFO, __FILE__, __func__,  \
+      __LINE__)                                                             \
+      .getStream() << lumos::logging::internal::colors::GREEN
+
+#define LUMOS_LOG_BLUE()                                                     \
+  lumos::logging::internal::Log(                                            \
+      lumos::logging::internal::MessageSeverity::INFO, __FILE__, __func__,  \
+      __LINE__)                                                             \
+      .getStream() << lumos::logging::internal::colors::BLUE
+
+#define LUMOS_LOG_YELLOW()                                                   \
+  lumos::logging::internal::Log(                                            \
+      lumos::logging::internal::MessageSeverity::INFO, __FILE__, __func__,  \
+      __LINE__)                                                             \
+      .getStream() << lumos::logging::internal::colors::YELLOW
+
+#define LUMOS_LOG_CYAN()                                                     \
+  lumos::logging::internal::Log(                                            \
+      lumos::logging::internal::MessageSeverity::INFO, __FILE__, __func__,  \
+      __LINE__)                                                             \
+      .getStream() << lumos::logging::internal::colors::CYAN
+
+#define LUMOS_LOG_RESET()                                                    \
+  lumos::logging::internal::Log(                                            \
+      lumos::logging::internal::MessageSeverity::INFO, __FILE__, __func__,  \
+      __LINE__)                                                             \
+      .getStream() << lumos::logging::internal::colors::RESET
+
 // Backward compatibility (can be disabled by defining LUMOS_NO_LEGACY_MACROS)
 #ifndef LUMOS_NO_LEGACY_MACROS
 #define LOG() LUMOS_LOG()
@@ -757,6 +794,12 @@ namespace lumos
 #define LOG_TRACE() LUMOS_LOG_TRACE()
 #define LOG_ERROR() LUMOS_LOG_ERROR()
 #define LOG_FATAL() LUMOS_LOG_FATAL()
+#define LOG_RED() LUMOS_LOG_RED()
+#define LOG_GREEN() LUMOS_LOG_GREEN()
+#define LOG_BLUE() LUMOS_LOG_BLUE()
+#define LOG_YELLOW() LUMOS_LOG_YELLOW()
+#define LOG_CYAN() LUMOS_LOG_CYAN()
+#define LOG_RESET() LUMOS_LOG_RESET()
 #endif
 
 #define LUMOS_PRINT() lumos::logging::internal::Log().getStream()

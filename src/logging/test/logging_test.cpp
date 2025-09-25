@@ -560,6 +560,116 @@ namespace lumos
             // Clean up
             std::remove(test_file.c_str());
         }
+        
+        // Test color-specific logging functions
+        TEST_F(LoggingTest, ColorLoggingFunctions)
+        {
+            // Enable colors for this test
+            internal::setUseColors(true);
+            
+            LOG_RED() << "Red message";
+            std::string red_output = getLastLogOutputAndClearStream();
+            EXPECT_TRUE(red_output.find("\033[31m") != std::string::npos);  // Red color code
+            EXPECT_TRUE(red_output.find("Red message") != std::string::npos);
+            EXPECT_TRUE(red_output.find("INFO") != std::string::npos);  // Should be INFO level
+            
+            LOG_GREEN() << "Green message";
+            std::string green_output = getLastLogOutputAndClearStream();
+            EXPECT_TRUE(green_output.find("\033[32m") != std::string::npos);  // Green color code
+            EXPECT_TRUE(green_output.find("Green message") != std::string::npos);
+            
+            LOG_BLUE() << "Blue message";
+            std::string blue_output = getLastLogOutputAndClearStream();
+            EXPECT_TRUE(blue_output.find("\033[34m") != std::string::npos);  // Blue color code
+            EXPECT_TRUE(blue_output.find("Blue message") != std::string::npos);
+            
+            LOG_YELLOW() << "Yellow message";
+            std::string yellow_output = getLastLogOutputAndClearStream();
+            EXPECT_TRUE(yellow_output.find("\033[33m") != std::string::npos);  // Yellow color code
+            EXPECT_TRUE(yellow_output.find("Yellow message") != std::string::npos);
+            
+            LOG_CYAN() << "Cyan message";
+            std::string cyan_output = getLastLogOutputAndClearStream();
+            EXPECT_TRUE(cyan_output.find("\033[36m") != std::string::npos);  // Cyan color code
+            EXPECT_TRUE(cyan_output.find("Cyan message") != std::string::npos);
+            
+            LOG_RESET() << "Reset message";
+            std::string reset_output = getLastLogOutputAndClearStream();
+            EXPECT_TRUE(reset_output.find("\033[0m") != std::string::npos);  // Reset color code
+            EXPECT_TRUE(reset_output.find("Reset message") != std::string::npos);
+        }
+        
+        // Test LUMOS_ prefixed color functions
+        TEST_F(LoggingTest, LumosColorLoggingFunctions)
+        {
+            internal::setUseColors(true);
+            
+            LUMOS_LOG_RED() << "LUMOS Red";
+            std::string output = getLastLogOutputAndClearStream();
+            EXPECT_TRUE(output.find("\033[31m") != std::string::npos);
+            EXPECT_TRUE(output.find("LUMOS Red") != std::string::npos);
+            
+            LUMOS_LOG_GREEN() << "LUMOS Green";
+            output = getLastLogOutputAndClearStream();
+            EXPECT_TRUE(output.find("\033[32m") != std::string::npos);
+            EXPECT_TRUE(output.find("LUMOS Green") != std::string::npos);
+        }
+        
+        // Test color functions with disabled colors
+        TEST_F(LoggingTest, ColorLoggingWithColorsDisabled)
+        {
+            internal::setUseColors(false);
+            
+            LOG_RED() << "Red without colors";
+            std::string output = getLastLogOutputAndClearStream();
+            EXPECT_TRUE(output.find("\033[") == std::string::npos);  // No color codes
+            EXPECT_TRUE(output.find("Red without colors") != std::string::npos);
+            EXPECT_TRUE(output.find("INFO") != std::string::npos);
+        }
+        
+        // Test color functions with stream operators
+        TEST_F(LoggingTest, ColorLoggingWithStreamOperators)
+        {
+            internal::setUseColors(true);
+            
+            LOG_GREEN() << "Success: " << 42 << " items processed";
+            std::string output = getLastLogOutputAndClearStream();
+            EXPECT_TRUE(output.find("\033[32m") != std::string::npos);
+            EXPECT_TRUE(output.find("Success: 42 items processed") != std::string::npos);
+            
+            LOG_RED() << "Error code: " << 404;
+            output = getLastLogOutputAndClearStream();
+            EXPECT_TRUE(output.find("\033[31m") != std::string::npos);
+            EXPECT_TRUE(output.find("Error code: 404") != std::string::npos);
+        }
+        
+        // Test color functions with file logging
+        TEST_F(LoggingTest, ColorLoggingWithFileOutput)
+        {
+            const std::string test_file = "/tmp/test_color_file.log";
+            
+            internal::setUseColors(true);
+            setupLogFile(test_file);
+            setLogToBothConsoleAndFile(false);  // Only to file
+            
+            LOG_BLUE() << "Blue message to file";
+            
+            disableFileLogging();
+            
+            // Read back and verify color codes are in file
+            std::ifstream file(test_file);
+            ASSERT_TRUE(file.is_open());
+            
+            std::string content((std::istreambuf_iterator<char>(file)),
+                               std::istreambuf_iterator<char>());
+            file.close();
+            
+            EXPECT_TRUE(content.find("\033[34m") != std::string::npos);  // Blue color
+            EXPECT_TRUE(content.find("Blue message to file") != std::string::npos);
+            
+            // Clean up
+            std::remove(test_file.c_str());
+        }
 
     } // namespace logging
 } // namespace lumos
