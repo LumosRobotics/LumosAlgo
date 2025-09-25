@@ -1,9 +1,9 @@
 [submodule "src/external/googletest"]
-	path = src/external/googletest
+	path = third_party/googletest
 	url = git@github.com:google/googletest.git
 [submodule "src/external/stb"]
-	path = src/external/stb
+	path = third_party/stb
 	url = https://github.com/nothings/stb.git
 [submodule "src/external/opencv"]
-	path = src/external/opencv
+	path = third_party/opencv
 	url = https://github.com/opencv/opencv.git
