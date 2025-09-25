@@ -12,7 +12,7 @@ target_link_libraries(${TARGET_NAME} ${GTEST_LIB_FILES})
 # Add include directories (argparse header is in parent directory)
 target_include_directories(${TARGET_NAME} PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}/..
-    ${CMAKE_SOURCE_DIR}/src/external/googletest/googletest/include
+    ${CMAKE_SOURCE_DIR}/third_party/googletest/googletest/include
 )
 
 # Add to test suite
