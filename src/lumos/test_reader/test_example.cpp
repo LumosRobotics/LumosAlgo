@@ -1,6 +1,8 @@
 #include "lumos/test_reader/text_reader.impl.h"
 #include <iostream>
 
+// TODO: This should be named "text_reader"
+
 int main()
 {
     try
