@@ -10,7 +10,7 @@
 #include "lumos/plotting/math/lin_alg/vector_low_dim/vec4.h"
 #include "lumos/plotting/math/misc/math_macros.h"
 
-namespace duoplot
+namespace lumos
 {
 
     template <typename T>
@@ -104,6 +104,6 @@ namespace duoplot
         return res;
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_LIN_ALG_MATRIX_VECTOR_DYNAMIC_H_

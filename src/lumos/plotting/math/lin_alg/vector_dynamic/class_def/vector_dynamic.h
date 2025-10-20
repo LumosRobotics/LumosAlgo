@@ -8,7 +8,7 @@
 #include "lumos/plotting/logging.h"
 #include "lumos/plotting/math/misc/forward_decl.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     class VectorInitializer
@@ -250,6 +250,6 @@ namespace duoplot
         T sum() const;
     };
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_LIN_ALG_VECTOR_DYNAMIC_CLASS_DEF_VECTOR_DYNAMIC_H_

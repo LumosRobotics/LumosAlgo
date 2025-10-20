@@ -3,7 +3,7 @@
 
 #include "lumos/plotting/math/misc/forward_decl.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     struct Vec4
@@ -27,6 +27,6 @@ namespace duoplot
         Vec4<T> elementWiseDivide(const Vec4<T> &numerator_vector) const;
         T angleBetweenVectors(const Vec4<T> &v) const;
     };
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_LIN_ALG_VECTOR_LOW_DIM_CLASS_DEF_VEC4_H_

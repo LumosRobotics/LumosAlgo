@@ -9,7 +9,7 @@
 #include "lumos/plotting/logging.h"
 #include "lumos/plotting/math/lin_alg/vector_dynamic/vector_dynamic.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     bool any(const Vector<T> &v)
@@ -270,6 +270,6 @@ namespace duoplot
         return s;
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_LIN_ALG_VECTOR_DYNAMIC_VECTOR_MATH_FUNCTIONS_H_

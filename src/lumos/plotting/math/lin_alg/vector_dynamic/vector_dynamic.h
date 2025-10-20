@@ -12,7 +12,7 @@
 #include "lumos/plotting/math/lin_alg/vector_dynamic/class_def/vector_dynamic.h"
 #include "lumos/plotting/math/misc/math_macros.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     Vector<T>::Vector() : data_(nullptr), size_(0) {}
@@ -860,6 +860,6 @@ namespace duoplot
         std::memcpy(v.data_, ptr, sizeof(Y) * vector_length);
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_LIN_ALG_VECTOR_DYNAMIC_VECTOR_DYNAMIC_H_

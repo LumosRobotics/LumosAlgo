@@ -4,7 +4,7 @@
 #include "lumos/plotting/internal.h"
 #include "lumos/plotting/math/math.h"
 
-namespace duoplot
+namespace lumos
 {
 
     template <typename... Us>
@@ -324,6 +324,6 @@ namespace duoplot
         }
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_CONTROL_FUNCTIONS_H

@@ -3,7 +3,7 @@
 
 #include "lumos/plotting/logging.h"
 
-namespace duoplot
+namespace lumos
 {
 #define DATA_ALLOCATION(data, data_size, data_type, alloc_type)                      \
     try                                                                              \
@@ -22,6 +22,6 @@ namespace duoplot
 
 #define ASSERT_VEC_VALID_INTERNAL() DUOPLOT_ASSERT(size_ > 0) << "Number of elements is 0!"
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_MISC_MATH_MACROS_H_

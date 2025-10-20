@@ -4,7 +4,7 @@
 #include "lumos/plotting/math/lin_alg.h"
 #include "lumos/plotting/math/transformations/class_def/axis_angle.h"
 
-namespace duoplot
+namespace lumos
 {
     // TODO: Axis needs to be normalized
     template <typename T>
@@ -121,6 +121,6 @@ namespace duoplot
         return axis_angle;
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_TRANSFORMATIONS_AXIS_ANGLE_H_

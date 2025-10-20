@@ -8,7 +8,7 @@
 #include "lumos/plotting/math/geometry/class_def/line_3d.h"
 #include "lumos/plotting/math/lin_alg.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     Line3D<T>::Line3D(const Point3<T> &p_, const Vec3<T> &v_) : p(p_), v(v_) {}
@@ -68,6 +68,6 @@ namespace duoplot
         return this->eval(t);
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_GEOMETRY_LINE_3D_H_

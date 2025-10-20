@@ -3,7 +3,7 @@
 
 #include "lumos/plotting/math/misc/forward_decl.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     struct Vec3
@@ -29,6 +29,6 @@ namespace duoplot
         T angleBetweenVectors(const Vec3<T> &v) const;
     };
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_LIN_ALG_VECTOR_LOW_DIM_CLASS_DEF_VEC3_H_

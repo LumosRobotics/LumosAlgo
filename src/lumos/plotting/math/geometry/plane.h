@@ -9,7 +9,7 @@
 #include "lumos/plotting/math/geometry/class_def/plane.h"
 #include "lumos/plotting/math/lin_alg.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     Plane<T>::Plane(const T a_, const T b_, const T c_, const T d_)
@@ -76,6 +76,6 @@ namespace duoplot
         return Plane<T>(p0, normal_vector);
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_GEOMETRY_PLANE_H_

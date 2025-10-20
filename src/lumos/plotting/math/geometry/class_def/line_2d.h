@@ -3,7 +3,7 @@
 
 #include "lumos/plotting/math/misc/forward_decl.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     struct HomogeneousLine2D
@@ -44,6 +44,6 @@ namespace duoplot
         Vec2<T> eval(const T t) const;
     };
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_GEOMETRY_CLASS_DEF_LINE_2D_H_

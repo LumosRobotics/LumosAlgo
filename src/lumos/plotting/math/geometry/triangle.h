@@ -7,7 +7,7 @@
 #include "lumos/plotting/math/geometry/class_def/triangle.h"
 #include "lumos/plotting/math/lin_alg.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     Triangle2D<T>::Triangle2D() {}
@@ -47,6 +47,6 @@ namespace duoplot
         p2 = t_other.p2;
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_GEOMETRY_TRIANGLE_H_

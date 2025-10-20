@@ -8,7 +8,7 @@
 #include "lumos/plotting/math/lin_alg/matrix_dynamic/class_def/matrix_dynamic.h"
 #include "lumos/plotting/math/misc/math_macros.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     Matrix<T> &Matrix<T>::operator=(const Matrix<T> &m)
@@ -664,6 +664,6 @@ namespace duoplot
         return s;
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_LIN_ALG_MATRIX_DYNAMIC_MATRIX_DYNAMIC_H_

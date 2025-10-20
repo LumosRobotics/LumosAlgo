@@ -6,7 +6,7 @@
 #include "lumos/plotting/communication_header.h"
 #include "lumos/plotting/item_id.h"
 
-namespace duoplot
+namespace lumos
 {
 
     /*
@@ -95,6 +95,6 @@ namespace duoplot
         }
     };
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_PROPERTY_STRUCTURE_

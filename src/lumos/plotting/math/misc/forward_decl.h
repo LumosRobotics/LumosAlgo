@@ -12,7 +12,7 @@
 
 #include "lumos/plotting/math/misc/math_macros.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     struct Vec2;
@@ -65,6 +65,6 @@ namespace duoplot
     template <typename T>
     using PointYZ = VecYZ<T>;
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_MISC_FORWARD_DECL_H_

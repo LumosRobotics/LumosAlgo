@@ -17,7 +17,7 @@
 #include "lumos/plotting/plot_properties.h"
 #include "lumos/plotting/utils.h"
 
-namespace duoplot
+namespace lumos
 {
     namespace internal
     {
@@ -327,6 +327,6 @@ namespace duoplot
         };
 
     } // namespace internal
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_COMMUNICATION_HEADER_OBJECT_H

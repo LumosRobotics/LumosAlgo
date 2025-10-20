@@ -3,7 +3,7 @@
 
 #include "lumos/plotting/math/misc/forward_decl.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     struct Line3D
@@ -23,6 +23,6 @@ namespace duoplot
 
         Point3<T> eval(const T t) const;
     };
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_GEOMETRY_CLASS_DEF_LINE_3D_H_

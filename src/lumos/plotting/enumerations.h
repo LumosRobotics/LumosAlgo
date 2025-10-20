@@ -5,7 +5,7 @@
 
 #include "lumos/plotting/item_id.h"
 
-namespace duoplot
+namespace lumos
 {
     namespace internal
     {
@@ -276,6 +276,6 @@ namespace duoplot
         Unknown
     };
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_ENUMERATIONS_H_

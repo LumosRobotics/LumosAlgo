@@ -11,7 +11,7 @@
 #include "lumos/plotting/gui_internal.h"
 #include "lumos/plotting/logging.h"
 
-namespace duoplot
+namespace lumos
 {
     namespace gui
     {
@@ -759,6 +759,6 @@ namespace duoplot
 
     } // namespace gui
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // GUI_API_H

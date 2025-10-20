@@ -8,7 +8,7 @@
 #include "lumos/plotting/math/geometry/class_def/line_2d.h"
 #include "lumos/plotting/math/lin_alg.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     HomogeneousLine2D<T>::HomogeneousLine2D(const T a_, const T b_, const T c_) : a(a_), b(b_), c(c_)
@@ -124,6 +124,6 @@ namespace duoplot
         return p + t * v;
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_GEOMETRY_LINE_2D_H_

@@ -8,7 +8,7 @@
 #include "lumos/plotting/math/lin_alg/matrix_fixed/class_def/matrix_fixed.h"
 #include "lumos/plotting/math/misc/math_macros.h"
 
-namespace duoplot
+namespace lumos
 {
 
     template <typename T, uint16_t R, uint16_t C>
@@ -612,6 +612,6 @@ namespace duoplot
         return unit_mat;
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_LIN_ALG_MATRIX_FIXED_MATRIX_FIXED_H_

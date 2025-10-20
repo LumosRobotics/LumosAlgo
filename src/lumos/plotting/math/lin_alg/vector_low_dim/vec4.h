@@ -5,7 +5,7 @@
 
 #include "lumos/plotting/math/lin_alg/vector_low_dim/class_def/vec4.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     Vec4<T>::Vec4(const T x_, const T y_, const T z_, const T w_)
@@ -202,6 +202,6 @@ namespace duoplot
         return os;
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_LIN_ALG_VECTOR_LOW_DIM_VEC4_H_

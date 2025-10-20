@@ -9,7 +9,7 @@
 #include "lumos/plotting/logging.h"
 #include "lumos/plotting/math/lin_alg/matrix_dynamic/matrix_dynamic.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     Vector<T> linspaceFromBoundariesAndCount(const T x0, const T x1, const size_t num_values);
@@ -355,6 +355,6 @@ namespace duoplot
         return rotation_matrix;
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_LIN_ALG_MATRIX_DYNAMIC_MATRIX_MATH_FUNCTIONS_H_

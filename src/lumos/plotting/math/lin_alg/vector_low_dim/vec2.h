@@ -5,7 +5,7 @@
 
 #include "lumos/plotting/math/lin_alg/vector_low_dim/class_def/vec2.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     Vec2<T>::Vec2(const T x_, const T y_)
@@ -198,6 +198,6 @@ namespace duoplot
         return os;
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_LIN_ALG_VECTOR_LOW_DIM_VEC2_H_

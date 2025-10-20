@@ -35,7 +35,7 @@
 #include "lumos/plotting/utils.h"
 #include "math/math.h"
 
-namespace duoplot
+namespace lumos
 {
     namespace internal
     {
@@ -433,6 +433,6 @@ namespace duoplot
         }
 
     } // namespace internal
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_INTERNAL_H_

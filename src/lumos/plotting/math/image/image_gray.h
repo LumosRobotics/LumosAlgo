@@ -9,7 +9,7 @@
 
 #include "lumos/plotting/logging.h"
 
-namespace duoplot
+namespace lumos
 {
 
     template <typename T>
@@ -271,6 +271,6 @@ namespace duoplot
         return data_[r * num_cols_ + c];
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_IMAGE_IMAGE_GRAY_H_

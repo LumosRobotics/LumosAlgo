@@ -8,7 +8,7 @@
 #include "lumos/plotting/logging.h"
 #include "lumos/plotting/math/math.h"
 
-namespace duoplot
+namespace lumos
 {
     namespace internal
     {
@@ -736,6 +736,6 @@ namespace duoplot
 
     } // namespace internal
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_PLOT_PROPERTIES_H_

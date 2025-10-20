@@ -6,7 +6,7 @@
 #include "lumos/plotting/logging.h"
 #include "lumos/plotting/math/misc/forward_decl.h"
 
-namespace duoplot
+namespace lumos
 {
 
     template <typename T, uint16_t R, uint16_t C>
@@ -42,6 +42,6 @@ namespace duoplot
         MatrixFixed<T, R, C> transposed() const;
     };
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_LIN_ALG_MATRIX_FIXED_CLASS_DEF_MATRIX_FIXED_H_

@@ -3,7 +3,7 @@
 
 #include "lumos/plotting/math/misc/forward_decl.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     struct AxisAngle
@@ -23,6 +23,6 @@ namespace duoplot
         Matrix<T> toRotationMatrix() const;
     };
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_TRANSFORMATIONS_CLASS_DEF_AXIS_ANGLE_H_

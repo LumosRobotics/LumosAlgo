@@ -10,7 +10,7 @@
 
 #include "lumos/plotting/logging.h"
 
-namespace duoplot
+namespace lumos
 {
 
     template <typename T>
@@ -394,6 +394,6 @@ namespace duoplot
         }
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_IMAGE_IMAGE_RGBA_H_

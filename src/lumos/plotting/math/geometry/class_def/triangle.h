@@ -3,7 +3,7 @@
 
 #include "lumos/plotting/math/misc/forward_decl.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     struct Triangle2D
@@ -29,6 +29,6 @@ namespace duoplot
         Triangle3D(const Triangle3D<Y> &t_other);
     };
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_GEOMETRY_CLASS_DEF_TRIANGLE_H_

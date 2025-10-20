@@ -12,7 +12,7 @@
 #include "lumos/plotting/internal.h"
 #include "lumos/plotting/math/math.h"
 
-namespace duoplot
+namespace lumos
 {
 
     namespace internal
@@ -660,6 +660,6 @@ namespace duoplot
         }
 
     } // namespace internal
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_GUI_INTERNAL_H

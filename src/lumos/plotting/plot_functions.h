@@ -10,7 +10,7 @@
 #include "lumos/plotting/internal.h"
 #include "lumos/plotting/math/math.h"
 
-namespace duoplot
+namespace lumos
 {
 
     template <typename T, typename... Us>
@@ -1785,6 +1785,6 @@ namespace duoplot
         drawScreenSpaceCoordinates(triangles, settings...);
     }
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_PLOT_FUNCTIONS_H

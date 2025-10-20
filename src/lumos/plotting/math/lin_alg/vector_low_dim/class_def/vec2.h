@@ -3,7 +3,7 @@
 
 #include "lumos/plotting/math/misc/forward_decl.h"
 
-namespace duoplot
+namespace lumos
 {
     template <typename T>
     struct Vec2
@@ -60,6 +60,6 @@ namespace duoplot
         VecYZ(const VecYZ<Y> &v) : y(v.y), z(v.z) {}
     };
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_LIN_ALG_VECTOR_LOW_DIM_CLASS_DEF_VEC2_H_

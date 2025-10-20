@@ -3,7 +3,7 @@
 
 #include "lumos/plotting/math/misc/forward_decl.h"
 
-namespace duoplot
+namespace lumos
 {
     typedef AxisAngle<double> AxisAngled;
     typedef HomogeneousLine2D<double> HomogeneousLine2Dd;
@@ -41,6 +41,6 @@ namespace duoplot
 
     typedef Vec2<int> Vec2i;
 
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_MATH_PRE_DEFS_H_

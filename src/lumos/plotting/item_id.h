@@ -3,10 +3,10 @@
 
 #include <stdint.h>
 
-namespace duoplot
+namespace lumos
 {
 
-// clang-format off
+    // clang-format off
 enum class ItemId : uint16_t
 {
     ID0,
@@ -525,9 +525,9 @@ constexpr ItemId ID252 = ItemId::ID252;
 constexpr ItemId ID253 = ItemId::ID253;
 constexpr ItemId ID254 = ItemId::ID254;
 
-// clang-format on
+        // clang-format on
 
-}  // namespace properties
-}  // namespace duoplot
+    } // namespace properties
+} // namespace lumos
 
-#endif  // DUOPLOT_IDS_H_
+#endif // DUOPLOT_IDS_H_

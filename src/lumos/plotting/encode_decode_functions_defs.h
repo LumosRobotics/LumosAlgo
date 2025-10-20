@@ -10,7 +10,7 @@
 
 #include "lumos/plotting/plot_properties.h"
 
-namespace duoplot
+namespace lumos
 {
     namespace internal
     {
@@ -91,6 +91,6 @@ namespace duoplot
                                                              const CommunicationHeaderObject &obj);
 
     } // namespace internal
-} // namespace duoplot
+} // namespace lumos
 
 #endif // DUOPLOT_ENCODE_DECODE_FUNCTIONS_DEFS_H
