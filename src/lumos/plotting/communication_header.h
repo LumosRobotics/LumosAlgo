@@ -13,8 +13,8 @@
 #include "lumos/plotting/encode_decode_functions.h"
 #include "lumos/plotting/enumerations.h"
 #include "lumos/plotting/fillable_uint8_array.h"
-#include "lumos/plotting/logging.h"
-#include "lumos/plotting/math/math.h"
+#include "lumos/logging.h"
+#include "lumos/math.h"
 #include "lumos/plotting/plot_properties.h"
 #include "lumos/plotting/utils.h"
 
@@ -282,7 +282,7 @@ namespace lumos
                                   std::is_same<properties::LineStyle, U>::value || std::is_same<properties::Color, U>::value ||
                                   std::is_same<properties::Color, U>::value,
                               "Incorrect type!");
-                DUOPLOT_ASSERT(sizeof(U) <= kCommunicationHeaderObjectDataSize) << "Object too big!";
+                ASSERT(sizeof(U) <= kCommunicationHeaderObjectDataSize) << "Object too big!";
 
                 if (std::is_same<U, PropertyFlag>::value)
                 {
@@ -388,7 +388,7 @@ namespace lumos
                 {
                     return CommunicationHeaderObjectType::ITEM_ID;
                 }
-                DUOPLOT_ASSERT(false); // TODO: Ugly
+                ASSERT(false); // TODO: Ugly
             }
 
         public:
@@ -600,7 +600,7 @@ namespace lumos
 
             CommunicationHeaderObject get(const CommunicationHeaderObjectType tp) const
             {
-                DUOPLOT_ASSERT(static_cast<uint8_t>(tp) < CommunicationHeaderObjectLookupTable::kTableSize);
+                ASSERT(static_cast<uint8_t>(tp) < CommunicationHeaderObjectLookupTable::kTableSize);
                 const uint8_t idx = objects_lut_.data[static_cast<uint8_t>(tp)];
                 if (idx == 255)
                 {

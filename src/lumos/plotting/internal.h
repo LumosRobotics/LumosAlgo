@@ -33,7 +33,7 @@
 #include "lumos/plotting/property_set.h"
 #include "lumos/plotting/timing.h"
 #include "lumos/plotting/utils.h"
-#include "math/math.h"
+#include "lumos/math.h"
 
 namespace lumos
 {
@@ -119,7 +119,7 @@ namespace lumos
 
             if (connect(tcp_sockfd, (struct sockaddr *)&tcp_servaddr, sizeof(tcp_servaddr)) == (-1))
             {
-                DUOPLOT_LOG_WARNING() << "Failed to connect! Is receiving application running?";
+                LOG_WARNING() << "Failed to connect! Is receiving application running?";
                 return;
             }
         }
@@ -155,7 +155,7 @@ namespace lumos
 
             if (connect(tcp_sockfd, (struct sockaddr *)&tcp_servaddr, sizeof(tcp_servaddr)) == (-1))
             {
-                DUOPLOT_LOG_WARNING() << "Failed to connect! Is receiving application running?";
+                LOG_WARNING() << "Failed to connect! Is receiving application running?";
                 return;
             }
 
@@ -394,7 +394,7 @@ namespace lumos
             FILE *const fp = popen("ps -ef | grep duoplot", "r");
             if (fp == NULL)
             {
-                DUOPLOT_LOG_ERROR() << "Failed to run command";
+                LOG_ERROR() << "Failed to run command";
                 return false;
             }
 

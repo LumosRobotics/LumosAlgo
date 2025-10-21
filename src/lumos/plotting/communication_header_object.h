@@ -12,8 +12,8 @@
 #include "lumos/plotting/encode_decode_functions_defs.h"
 #include "lumos/plotting/enumerations.h"
 #include "lumos/plotting/fillable_uint8_array.h"
-#include "lumos/plotting/logging.h"
-#include "lumos/plotting/math/math.h"
+#include "lumos/logging.h"
+#include "lumos/math.h"
 #include "lumos/plotting/plot_properties.h"
 #include "lumos/plotting/utils.h"
 
@@ -104,8 +104,8 @@ namespace lumos
             }
 
             CommunicationHeaderObject(const CommunicationHeaderObjectType input_type,
-                                      const MatrixFixed<double, 3, 3> &input_data)
-                : type{input_type}, size{sizeof(MatrixFixed<double, 3, 3>)}
+                                      const FixedSizeMatrix<double, 3, 3> &input_data)
+                : type{input_type}, size{sizeof(FixedSizeMatrix<double, 3, 3>)}
             {
                 size_t idx = 0U;
 
@@ -173,9 +173,9 @@ namespace lumos
             }
 
             template <>
-            MatrixFixed<double, 3, 3> as() const
+            FixedSizeMatrix<double, 3, 3> as() const
             {
-                MatrixFixed<double, 3, 3> mat;
+                FixedSizeMatrix<double, 3, 3> mat;
                 deserializeFromCommunicationHeaderObject(mat, *this);
                 return mat;
             }

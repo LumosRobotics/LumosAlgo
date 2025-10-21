@@ -308,63 +308,63 @@ namespace lumos
 
         inline void useColors(const bool use_colors)
         {
-            duoplot::logging::internal::setUseColors(use_colors);
+            lumos::logging::internal::setUseColors(use_colors);
         }
 
         inline void showFile(const bool show_file)
         {
-            duoplot::logging::internal::setShowFile(show_file);
+            lumos::logging::internal::setShowFile(show_file);
         }
 
         inline void showLineNumber(const bool show_line_number)
         {
-            duoplot::logging::internal::setShowLineNumber(show_line_number);
+            lumos::logging::internal::setShowLineNumber(show_line_number);
         }
 
         inline void showFunction(const bool show_function)
         {
-            duoplot::logging::internal::setShowFunc(show_function);
+            lumos::logging::internal::setShowFunc(show_function);
         }
 
         inline void showThreadId(const bool show_thread_id)
         {
-            duoplot::logging::internal::setShowThreadId(show_thread_id);
+            lumos::logging::internal::setShowThreadId(show_thread_id);
         }
 
     } // namespace logging
 } // namespace lumos
 
 #define DUOPLOT_LOG() \
-    duoplot::logging::internal::Log(duoplot::logging::internal::MessageSeverity::LOG, __FILE__, __func__, __LINE__).getStream()
+    lumos::logging::internal::Log(lumos::logging::internal::MessageSeverity::LOG, __FILE__, __func__, __LINE__).getStream()
 #define DUOPLOT_LOG_INFO() \
-    duoplot::logging::internal::Log(duoplot::logging::internal::MessageSeverity::INFO, __FILE__, __func__, __LINE__).getStream()
+    lumos::logging::internal::Log(lumos::logging::internal::MessageSeverity::INFO, __FILE__, __func__, __LINE__).getStream()
 #define DUOPLOT_LOG_DEBUG()                                                                                           \
-    duoplot::logging::internal::Log(duoplot::logging::internal::MessageSeverity::DEBUG, __FILE__, __func__, __LINE__) \
+    lumos::logging::internal::Log(lumos::logging::internal::MessageSeverity::DEBUG, __FILE__, __func__, __LINE__) \
         .getStream()
 #define DUOPLOT_LOG_WARNING()                                                                                           \
-    duoplot::logging::internal::Log(duoplot::logging::internal::MessageSeverity::WARNING, __FILE__, __func__, __LINE__) \
+    lumos::logging::internal::Log(lumos::logging::internal::MessageSeverity::WARNING, __FILE__, __func__, __LINE__) \
         .getStream()
 #define DUOPLOT_LOG_TRACE()                                                                                           \
-    duoplot::logging::internal::Log(duoplot::logging::internal::MessageSeverity::TRACE, __FILE__, __func__, __LINE__) \
+    lumos::logging::internal::Log(lumos::logging::internal::MessageSeverity::TRACE, __FILE__, __func__, __LINE__) \
         .getStream()
 #define DUOPLOT_LOG_ERROR()                                                                                           \
-    duoplot::logging::internal::Log(duoplot::logging::internal::MessageSeverity::ERROR, __FILE__, __func__, __LINE__) \
+    lumos::logging::internal::Log(lumos::logging::internal::MessageSeverity::ERROR, __FILE__, __func__, __LINE__) \
         .getStream()
 #define DUOPLOT_LOG_FATAL()                                                                                           \
-    duoplot::logging::internal::Log(duoplot::logging::internal::MessageSeverity::FATAL, __FILE__, __func__, __LINE__) \
+    lumos::logging::internal::Log(lumos::logging::internal::MessageSeverity::FATAL, __FILE__, __func__, __LINE__) \
         .getStream()
 
-#define DUOPLOT_PRINT() duoplot::logging::internal::Log().getStream()
+#define DUOPLOT_PRINT() lumos::logging::internal::Log().getStream()
 
-#define DUOPLOT_PRINT_COND(cond) duoplot::logging::internal::Log(cond).getStream()
+#define DUOPLOT_PRINT_COND(cond) lumos::logging::internal::Log(cond).getStream()
 
 #define DUOPLOT_ASSERT(cond)                                                                        \
-    duoplot::logging::internal::Log(                                                                \
-        duoplot::logging::internal::MessageSeverity::ASSERTION, __FILE__, __func__, __LINE__, cond) \
+    lumos::logging::internal::Log(                                                                \
+        lumos::logging::internal::MessageSeverity::ASSERTION, __FILE__, __func__, __LINE__, cond) \
         .getStream()
 
 #define DUOPLOT_EXIT(cond)                                                                                                  \
-    duoplot::logging::internal::Log(duoplot::logging::internal::MessageSeverity::EXIT, __FILE__, __func__, __LINE__, false) \
+    lumos::logging::internal::Log(lumos::logging::internal::MessageSeverity::EXIT, __FILE__, __func__, __LINE__, false) \
         .getStream()
 
 #endif // DUOPLOT_LOGGING_H_

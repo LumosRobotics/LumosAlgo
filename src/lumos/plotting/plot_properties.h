@@ -5,8 +5,8 @@
 #include <iostream>
 
 #include "lumos/plotting/enumerations.h"
-#include "lumos/plotting/logging.h"
-#include "lumos/plotting/math/math.h"
+#include "lumos/logging.h"
+#include "lumos/math.h"
 
 namespace lumos
 {
@@ -83,14 +83,14 @@ namespace lumos
 
         struct Transform : internal::PropertyBase
         {
-            MatrixFixed<double, 3, 3> scale;
-            MatrixFixed<double, 3, 3> rotation;
+            FixedSizeMatrix<double, 3, 3> scale;
+            FixedSizeMatrix<double, 3, 3> rotation;
             Vec3<double> translation;
 
             Transform() : internal::PropertyBase{internal::PropertyType::TRANSFORM} {}
 
-            explicit Transform(const MatrixFixed<double, 3, 3> &scale_,
-                               const MatrixFixed<double, 3, 3> &rotation_,
+            explicit Transform(const FixedSizeMatrix<double, 3, 3> &scale_,
+                               const FixedSizeMatrix<double, 3, 3> &rotation_,
                                const Vec3<double> &translation_)
                 : internal::PropertyBase{internal::PropertyType::TRANSFORM},
                   scale{scale_},
@@ -104,11 +104,11 @@ namespace lumos
             {
                 translation = translation_;
 
-                DUOPLOT_ASSERT(rotation_.numRows() == 3U) << "Expected 3 rows for rotation matrix, got " << rotation_.numRows();
-                DUOPLOT_ASSERT(rotation_.numCols() == 3U) << "Expected 3 cols for rotation matrix, got " << rotation_.numCols();
+                ASSERT(rotation_.numRows() == 3U) << "Expected 3 rows for rotation matrix, got " << rotation_.numRows();
+                ASSERT(rotation_.numCols() == 3U) << "Expected 3 cols for rotation matrix, got " << rotation_.numCols();
 
-                DUOPLOT_ASSERT(scale_.numRows() == 3U) << "Expected 3 rows for scale matrix, got " << scale_.numRows();
-                DUOPLOT_ASSERT(scale_.numCols() == 3U) << "Expected 3 cols for scale matrix, got " << scale_.numCols();
+                ASSERT(scale_.numRows() == 3U) << "Expected 3 rows for scale matrix, got " << scale_.numRows();
+                ASSERT(scale_.numCols() == 3U) << "Expected 3 cols for scale matrix, got " << scale_.numCols();
 
                 for (size_t r = 0; r < 3; r++)
                 {
@@ -140,10 +140,10 @@ namespace lumos
 
             explicit Label(const char *const name) : internal::PropertyBase{internal::PropertyType::NAME}
             {
-                DUOPLOT_ASSERT(name) << "Input name string is null!";
+                ASSERT(name) << "Input name string is null!";
                 const size_t len = internal::safeStringLenCheck(name, kMaxLength);
 
-                DUOPLOT_ASSERT(len <= kMaxLength) << "Label can't be more than 100 characters!";
+                ASSERT(len <= kMaxLength) << "Label can't be more than 100 characters!";
                 length = len;
 
                 std::memcpy(data, name, len);

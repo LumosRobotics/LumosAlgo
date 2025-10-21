@@ -19,10 +19,10 @@
 #include "lumos/math/transformations/euler_angles.h"
 #include "lumos/math/transformations/axis_angle.h"
 
-// #include "lumos/math/geometry/line_2d.h"
-// #include "lumos/math/geometry/line_3d.h"
-// #include "lumos/math/geometry/plane.h"
-// #include "lumos/math/geometry/triangle.h"
+#include "lumos/math/geometry/line_2d.h"
+#include "lumos/math/geometry/line_3d.h"
+#include "lumos/math/geometry/plane.h"
+#include "lumos/math/geometry/triangle.h"
 
 #include "lumos/math/structures/index_triplet.h"
 

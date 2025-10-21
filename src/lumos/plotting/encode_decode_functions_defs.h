@@ -51,20 +51,20 @@ namespace lumos
         inline void serializeToCommunicationHeaderObject(CommunicationHeaderObject &obj, const properties::FaceColor &prop);
         inline void serializeToCommunicationHeaderObject(CommunicationHeaderObject &obj, const properties::ColorMap &prop);
         inline void serializeToCommunicationHeaderObject(CommunicationHeaderObject &obj, const properties::PointSize &prop);
-        inline void serializeToCommunicationHeaderObject(::duoplot::internal::CommunicationHeaderObject &obj,
+        inline void serializeToCommunicationHeaderObject(CommunicationHeaderObject &obj,
                                                          const properties::DistanceFrom &prop);
         inline void serializeToCommunicationHeaderObject(CommunicationHeaderObject &obj, const properties::BufferSize &prop);
         inline void serializeToCommunicationHeaderObject(CommunicationHeaderObject &obj, const internal::PropertyFlag &prop);
         inline void serializeToCommunicationHeaderObject(CommunicationHeaderObject &obj, const ItemId &prop);
 
-        inline void deserializeFromCommunicationHeaderObject(internal::PropertyBase &prop,
+        inline void deserializeFromCommunicationHeaderObject(PropertyBase &prop,
                                                              const CommunicationHeaderObject &obj);
         inline void deserializeFromCommunicationHeaderObject(properties::LineWidth &prop, const CommunicationHeaderObject &obj);
         inline void deserializeFromCommunicationHeaderObject(properties::Alpha &prop, const CommunicationHeaderObject &obj);
         inline void deserializeFromCommunicationHeaderObject(properties::ZOffset &prop, const CommunicationHeaderObject &obj);
         inline void deserializeFromCommunicationHeaderObject(properties::Transform &prop, const CommunicationHeaderObject &obj);
         inline void deserializeFromCommunicationHeaderObject(properties::Label &prop, const CommunicationHeaderObject &obj);
-        inline void deserializeFromCommunicationHeaderObject(internal::ColorInternal &prop,
+        inline void deserializeFromCommunicationHeaderObject(ColorInternal &prop,
                                                              const CommunicationHeaderObject &obj);
         inline void deserializeFromCommunicationHeaderObject(properties::EdgeColor &prop, const CommunicationHeaderObject &obj);
         inline void deserializeFromCommunicationHeaderObject(properties::FaceColor &prop, const CommunicationHeaderObject &obj);
@@ -79,15 +79,15 @@ namespace lumos
                                                              const CommunicationHeaderObject &obj);
         inline void deserializeFromCommunicationHeaderObject(properties::BufferSize &prop,
                                                              const CommunicationHeaderObject &obj);
-        inline void deserializeFromCommunicationHeaderObject(internal::PropertyFlag &prop,
+        inline void deserializeFromCommunicationHeaderObject(PropertyFlag &prop,
                                                              const CommunicationHeaderObject &obj);
         inline void deserializeFromCommunicationHeaderObject(ItemId &prop, const CommunicationHeaderObject &obj);
-        inline void deserializeFromCommunicationHeaderObject(internal::Dimension2D &item, const CommunicationHeaderObject &obj);
+        inline void deserializeFromCommunicationHeaderObject(Dimension2D &item, const CommunicationHeaderObject &obj);
         inline void deserializeFromCommunicationHeaderObject(std::pair<Vec3<double>, Vec3<double>> &item,
                                                              const CommunicationHeaderObject &obj);
-        inline void deserializeFromCommunicationHeaderObject(internal::DataType &item, const CommunicationHeaderObject &obj);
+        inline void deserializeFromCommunicationHeaderObject(DataType &item, const CommunicationHeaderObject &obj);
         inline void deserializeFromCommunicationHeaderObject(Vec3<double> &item, const CommunicationHeaderObject &obj);
-        inline void deserializeFromCommunicationHeaderObject(MatrixFixed<double, 3, 3> &item,
+        inline void deserializeFromCommunicationHeaderObject(FixedSizeMatrix<double, 3, 3> &item,
                                                              const CommunicationHeaderObject &obj);
 
     } // namespace internal

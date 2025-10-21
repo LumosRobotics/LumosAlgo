@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "lumos/plotting/logging.h"
+#include "lumos/logging.h"
 
 class UInt8ArrayView
 {
@@ -67,7 +67,7 @@ public:
         std::memcpy(&(data_[idx_]), &d, sizeof(T));
         idx_ += sizeof(T);
 
-        DUOPLOT_ASSERT(idx_ <= size_);
+        ASSERT(idx_ <= size_);
     }
 
     template <typename T>
@@ -76,7 +76,7 @@ public:
         std::memcpy(&(data_[idx_]), d, num_elements * sizeof(T));
         idx_ += num_elements * sizeof(T);
 
-        DUOPLOT_ASSERT(idx_ <= size_);
+        ASSERT(idx_ <= size_);
     }
 
     UInt8ArrayView view() const

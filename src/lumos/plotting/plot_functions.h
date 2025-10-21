@@ -8,7 +8,7 @@
 #include <utility>
 
 #include "lumos/plotting/internal.h"
-#include "lumos/plotting/math/math.h"
+#include "lumos/math.h"
 
 namespace lumos
 {
@@ -58,7 +58,7 @@ namespace lumos
 
         if (hdr.hasPropertyFlag(internal::PropertyFlag::FAST_PLOT))
         {
-            DUOPLOT_LOG_WARNING() << "Property FAST_PLOT not available when using function \"plot\" with color vector!";
+            LOG_WARNING() << "Property FAST_PLOT not available when using function \"plot\" with color vector!";
         }
 
         internal::sendHeaderAndData(internal::getSendFunction(), hdr, x, y, color);
@@ -78,7 +78,7 @@ namespace lumos
 
         if (hdr.hasPropertyFlag(internal::PropertyFlag::FAST_PLOT))
         {
-            DUOPLOT_LOG_WARNING() << "Property FAST_PLOT not available when using function \"plot\" with color vector!";
+            LOG_WARNING() << "Property FAST_PLOT not available when using function \"plot\" with color vector!";
         }
 
         internal::sendHeaderAndData(internal::getSendFunction(), hdr, x, y, color);
@@ -138,14 +138,14 @@ namespace lumos
         hdr.append(internal::CommunicationHeaderObjectType::DATA_TYPE, internal::typeToDataTypeEnum<T>());
         hdr.append(internal::CommunicationHeaderObjectType::NUM_OBJECTS, internal::toUInt32(x.size()));
 
-        DUOPLOT_ASSERT(x.size() == y.size());
+        ASSERT(x.size() == y.size());
 
         uint32_t num_elements = 0;
         Vector<uint16_t> vector_lengths(x.size());
 
         for (size_t k = 0; k < x.size(); k++)
         {
-            DUOPLOT_ASSERT(x[k].size() == y[k].size());
+            ASSERT(x[k].size() == y[k].size());
             vector_lengths(k) = x[k].size();
             num_elements += x[k].size();
         }
@@ -167,7 +167,7 @@ namespace lumos
         hdr.append(internal::CommunicationHeaderObjectType::DATA_TYPE, internal::typeToDataTypeEnum<T>());
         hdr.append(internal::CommunicationHeaderObjectType::NUM_OBJECTS, internal::toUInt32(x.size()));
 
-        DUOPLOT_ASSERT(x.size() == y.size());
+        ASSERT(x.size() == y.size());
 
         uint32_t num_elements = 0;
         Vector<uint16_t> vector_lengths(x.size());
@@ -176,7 +176,7 @@ namespace lumos
         {
             const VectorConstView<T> x_view = x[k];
             const VectorConstView<T> y_view = y[k];
-            DUOPLOT_ASSERT(x_view.size() == y_view.size());
+            ASSERT(x_view.size() == y_view.size());
             vector_lengths(k) = x_view.size();
             num_elements += x_view.size();
         }
@@ -199,16 +199,16 @@ namespace lumos
         hdr.append(internal::CommunicationHeaderObjectType::DATA_TYPE, internal::typeToDataTypeEnum<T>());
         hdr.append(internal::CommunicationHeaderObjectType::NUM_OBJECTS, internal::toUInt32(x.size()));
 
-        DUOPLOT_ASSERT(x.size() == y.size());
-        DUOPLOT_ASSERT(x.size() == z.size());
+        ASSERT(x.size() == y.size());
+        ASSERT(x.size() == z.size());
 
         uint32_t num_elements = 0;
         Vector<uint16_t> vector_lengths(x.size());
 
         for (size_t k = 0; k < x.size(); k++)
         {
-            DUOPLOT_ASSERT(x[k].size() == y[k].size());
-            DUOPLOT_ASSERT(x[k].size() == z[k].size());
+            ASSERT(x[k].size() == y[k].size());
+            ASSERT(x[k].size() == z[k].size());
             vector_lengths(k) = x[k].size();
             num_elements += x[k].size();
         }
@@ -232,8 +232,8 @@ namespace lumos
         hdr.append(internal::CommunicationHeaderObjectType::DATA_TYPE, internal::typeToDataTypeEnum<T>());
         hdr.append(internal::CommunicationHeaderObjectType::NUM_OBJECTS, internal::toUInt32(x.size()));
 
-        DUOPLOT_ASSERT(x.size() == y.size());
-        DUOPLOT_ASSERT(x.size() == z.size());
+        ASSERT(x.size() == y.size());
+        ASSERT(x.size() == z.size());
 
         uint32_t num_elements = 0;
         Vector<uint16_t> vector_lengths(x.size());
@@ -243,8 +243,8 @@ namespace lumos
             const VectorConstView<T> x_view = x[k];
             const VectorConstView<T> y_view = y[k];
             const VectorConstView<T> z_view = z[k];
-            DUOPLOT_ASSERT(x_view.size() == y_view.size());
-            DUOPLOT_ASSERT(x_view.size() == z_view.size());
+            ASSERT(x_view.size() == y_view.size());
+            ASSERT(x_view.size() == z_view.size());
             vector_lengths(k) = x_view.size();
             num_elements += x_view.size();
         }
@@ -327,7 +327,7 @@ namespace lumos
 
         if (hdr.hasPropertyFlag(internal::PropertyFlag::FAST_PLOT))
         {
-            DUOPLOT_LOG_WARNING() << "Property FAST_PLOT not available when using function \"plot3\" with color vector!";
+            LOG_WARNING() << "Property FAST_PLOT not available when using function \"plot3\" with color vector!";
         }
 
         internal::sendHeaderAndData(internal::getSendFunction(), hdr, x, y, z, color);
@@ -348,7 +348,7 @@ namespace lumos
 
         if (hdr.hasPropertyFlag(internal::PropertyFlag::FAST_PLOT))
         {
-            DUOPLOT_LOG_WARNING() << "Property FAST_PLOT not available when using function \"plot3\" with color vector!";
+            LOG_WARNING() << "Property FAST_PLOT not available when using function \"plot3\" with color vector!";
         }
 
         internal::sendHeaderAndData(internal::getSendFunction(), hdr, x, y, z, color);

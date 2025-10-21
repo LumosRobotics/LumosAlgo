@@ -374,7 +374,7 @@ namespace lumos
                    + sizeof(uint8_t);    // dist_from_type_
         }
 
-        inline void serializeToCommunicationHeaderObject(::duoplot::internal::CommunicationHeaderObject &obj,
+        inline void serializeToCommunicationHeaderObject(CommunicationHeaderObject &obj,
                                                          const properties::DistanceFrom &prop)
         {
             obj.size = numBytes(prop);
@@ -548,7 +548,7 @@ namespace lumos
             idx += sizeof(double);
         }
 
-        inline void deserializeFromCommunicationHeaderObject(MatrixFixed<double, 3, 3> &item,
+        inline void deserializeFromCommunicationHeaderObject(FixedSizeMatrix<double, 3, 3> &item,
                                                              const CommunicationHeaderObject &obj)
         {
             size_t idx = 0U;

@@ -10,7 +10,7 @@
 #include <utility>
 
 #include "lumos/plotting/internal.h"
-#include "lumos/plotting/math/math.h"
+#include "lumos/math.h"
 
 namespace lumos
 {
@@ -536,7 +536,7 @@ namespace lumos
             {
                 if (gui_element_handles[handle_string]->getType() != type)
                 {
-                    DUOPLOT_LOG_ERROR() << "Gui element with handle string " << handle_string
+                    LOG_ERROR() << "Gui element with handle string " << handle_string
                                         << " already exists, but has different type!";
                     return;
                 }
@@ -581,10 +581,10 @@ namespace lumos
 
         inline void waitForSyncForAllGuiElements()
         {
-            DUOPLOT_LOG_INFO() << "Waiting for duoplot application to send GUI state...";
+            LOG_INFO() << "Waiting for duoplot application to send GUI state...";
             const ReceivedGuiData received_data{receiveGuiData()};
 
-            DUOPLOT_LOG_INFO() << "GUI state received!";
+            LOG_INFO() << "GUI state received!";
 
             size_t idx{1U};
 

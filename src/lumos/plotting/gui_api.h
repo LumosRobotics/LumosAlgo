@@ -9,7 +9,7 @@
 #include "lumos/plotting/enumerations.h"
 #include "lumos/plotting/fillable_uint8_array.h"
 #include "lumos/plotting/gui_internal.h"
-#include "lumos/plotting/logging.h"
+#include "lumos/logging.h"
 
 namespace lumos
 {
@@ -369,7 +369,7 @@ namespace lumos
 
             if (gui_callbacks.find(handle_string) != gui_callbacks.end())
             {
-                DUOPLOT_LOG_WARNING() << "Gui callback with name " << handle_string
+                LOG_WARNING() << "Gui callback with name " << handle_string
                                       << " already exists! Overwriting old callback...";
             }
 
@@ -746,11 +746,11 @@ namespace lumos
             usleep(1000U * 1000U);
             if (internal::isDuoplotRunning())
             {
-                // DUOPLOT_LOG_INFO() << "duoplot is running!";
+                // LOG_INFO() << "duoplot is running!";
             }
             else
             {
-                // DUOPLOT_LOG_ERROR() << "duoplot is not running!";
+                // LOG_ERROR() << "duoplot is not running!";
             }
         } });
 

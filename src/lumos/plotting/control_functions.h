@@ -2,7 +2,7 @@
 #define DUOPLOT_CONTROL_FUNCTIONS_H
 
 #include "lumos/plotting/internal.h"
-#include "lumos/plotting/math/math.h"
+#include "lumos/math.h"
 
 namespace lumos
 {
@@ -16,7 +16,7 @@ namespace lumos
 
         if (hdr.hasPropertyFlag(internal::PropertyFlag::APPENDABLE))
         {
-            DUOPLOT_LOG_WARNING()
+            LOG_WARNING()
                 << "Flag APPENDABLE is not allowed for setProperties()! Set in function call instead, e.g. "
                    "scatter(x, y, properties::APPENDABLE).";
             return;
@@ -24,7 +24,7 @@ namespace lumos
 
         if (hdr.hasPropertyFlag(internal::PropertyFlag::FAST_PLOT))
         {
-            DUOPLOT_LOG_WARNING()
+            LOG_WARNING()
                 << "Flag FAST_PLOT is not allowed for setProperties()! Set in function call instead, e.g. "
                    "plot(x, y, properties::FAST_PLOT).";
             return;
@@ -63,7 +63,7 @@ namespace lumos
     {
         if (name.length() == 0)
         {
-            DUOPLOT_LOG_ERROR() << "Cannot set element name with string length 0!";
+            LOG_ERROR() << "Cannot set element name with string length 0!";
             return;
         }
 
@@ -243,7 +243,7 @@ namespace lumos
     {
         if (title.length() == 0)
         {
-            DUOPLOT_LOG_ERROR() << "Cannot set title with string length 0!";
+            LOG_ERROR() << "Cannot set title with string length 0!";
             return;
         }
 
@@ -258,13 +258,13 @@ namespace lumos
                              const Matrix<double> &rotation,
                              const Vec3<double> &translation)
     {
-        DUOPLOT_ASSERT(rotation.numRows() == 3) << "Number of rows should be 3!";
-        DUOPLOT_ASSERT(rotation.numCols() == 3) << "Number of columns should be 3!";
+        ASSERT(rotation.numRows() == 3) << "Number of rows should be 3!";
+        ASSERT(rotation.numCols() == 3) << "Number of columns should be 3!";
 
-        DUOPLOT_ASSERT(scale.numRows() == 3) << "Number of rows should be 3!";
-        DUOPLOT_ASSERT(scale.numCols() == 3) << "Number of columns should be 3!";
+        ASSERT(scale.numRows() == 3) << "Number of rows should be 3!";
+        ASSERT(scale.numCols() == 3) << "Number of columns should be 3!";
 
-        MatrixFixed<double, 3, 3> r_mat, scale_mat;
+        FixedSizeMatrix<double, 3, 3> r_mat, scale_mat;
 
         for (size_t r = 0; r < 3; r++)
         {
@@ -302,8 +302,8 @@ namespace lumos
     }
 
     inline void setTransform(const ItemId id,
-                             const MatrixFixed<double, 3, 3> &scale,
-                             const MatrixFixed<double, 3, 3> &rotation,
+                             const FixedSizeMatrix<double, 3, 3> &scale,
+                             const FixedSizeMatrix<double, 3, 3> &rotation,
                              const Vec3<double> &translation)
     {
         internal::CommunicationHeader hdr{internal::Function::SET_OBJECT_TRANSFORM};
@@ -319,7 +319,7 @@ namespace lumos
     {
         if (!internal::isDuoplotRunning())
         {
-            DUOPLOT_LOG_INFO() << "Starting duoplot";
+            LOG_INFO() << "Starting duoplot";
             system("./main_application/duoplot &");
         }
     }
